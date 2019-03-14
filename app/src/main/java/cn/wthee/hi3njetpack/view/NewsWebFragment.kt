@@ -1,40 +1,30 @@
 package cn.wthee.hi3njetpack.view
 
 import android.content.Intent
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.view.*
 import androidx.fragment.app.Fragment
-import cn.wthee.hi3njetpack.databinding.FragmentWebBinding
+import cn.wthee.hi3njetpack.databinding.FragmentWebNewsBinding
 import cn.wthee.hi3njetpack.util.ImgUtil
 import android.os.Build
 import android.webkit.*
 import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toolbar
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ShareCompat
-import androidx.fragment.app.FragmentActivity
-import cn.wthee.hi3njetpack.MainActivity
 import cn.wthee.hi3njetpack.MyApplication
 import cn.wthee.hi3njetpack.R
-import cn.wthee.hi3njetpack.util.MarqueTextView
 import com.bumptech.glide.Glide
-import com.google.android.material.appbar.AppBarLayout
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_web.*
 
 
-class WebFragment : Fragment() {
+class NewsWebFragment : Fragment() {
 
     private lateinit var webView: WebView
-    private lateinit var binding:FragmentWebBinding
+    private lateinit var binding:FragmentWebNewsBinding
     private lateinit var mActivity: AppCompatActivity
-    private lateinit var appBarLayout: AppBarLayout
-    private lateinit var tb_title: TextView
+    private lateinit var toolbar: Toolbar
     private lateinit var web_pv: ImageView
     private lateinit var mLink: String
     private lateinit var imgurl: String
@@ -43,19 +33,16 @@ class WebFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mLink = WebFragmentArgs.fromBundle(arguments!!).link
+        mLink = NewsWebFragmentArgs.fromBundle(arguments!!).link
         setHasOptionsMenu(true)
         mActivity =  (activity as AppCompatActivity)
-        tb_title = mActivity.findViewById(R.id.tb_title)
-        appBarLayout = mActivity.findViewById(R.id.appbar)
-        web_pv = mActivity.findViewById(R.id.web_pv)
 
-        binding = FragmentWebBinding.inflate(inflater,container,false)
+        binding = FragmentWebNewsBinding.inflate(inflater,container,false)
         webView = binding.webView
+        web_pv = binding.webPv
+        toolbar = mActivity.findViewById(R.id.toolbar)
         showWeb(webView,mLink)
 
-
-        appBarLayout.background = ColorDrawable(resources.getColor(R.color.white))
 
         webView.setOnLongClickListener{
             var hitTestResult = webView.hitTestResult
@@ -76,13 +63,7 @@ class WebFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        tb_title.text = ""
-        appBarLayout.background = ColorDrawable(resources.getColor(R.color.colorPrimary))
-        mActivity.runOnUiThread {
-            Glide.with(MyApplication.context)
-                .load("")
-                .into(web_pv)
-        }
+        toolbar.title = mActivity.getText(R.string.app_name)
     }
 
     private fun showWeb(webView: WebView, url: String){
@@ -93,8 +74,8 @@ class WebFragment : Fragment() {
         webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 if(newProgress == 100){
-                    webView.loadUrl("javascript:" +
-                            "window.local_obj.setTitle(\$('h2').text());")
+//                    webView.loadUrl("javascript:" +
+//                            "window.local_obj.setTitle(\$('h2').text());")
                     webView.loadUrl("javascript:" +
                             "window.local_obj.setBg(\$('#title_img_big').attr('src'));")
                     webView.loadUrl("javascript:" +
@@ -104,8 +85,7 @@ class WebFragment : Fragment() {
                             "\$('#main')[0].style.background = '#ffffff';" +
                             "\$('#main')[0].style.color = '#000000';" +
                             "\$('.page_control').hide();" +
-                            "\$('.footer').hide();" +
-                            "\$('h2').hide();")
+                            "\$('.footer').hide();")
                     Handler().postDelayed({
                         webView.visibility = View.VISIBLE
                     }, 100.toLong())
@@ -118,6 +98,7 @@ class WebFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
         inflater.inflate(R.menu.menu_web_fragment, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
@@ -149,12 +130,12 @@ class WebFragment : Fragment() {
 
     internal inner class InJavaScriptLocalObj {
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-        @JavascriptInterface
-        fun setTitle(title: String) {
-            mActivity.runOnUiThread {
-                tb_title.text = title
-            }
-        }
+//        @JavascriptInterface
+//        fun setTitle(title: String) {
+//            mActivity.runOnUiThread {
+//                toolbar.title = title
+//            }
+//        }
         @JavascriptInterface
         fun setBg(img: String){
             mActivity.runOnUiThread {

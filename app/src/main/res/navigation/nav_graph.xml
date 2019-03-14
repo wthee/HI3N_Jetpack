@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/newsFragment">
+    app:startDestination="@id/videoFragment">
 
     <fragment
         android:id="@+id/newsFragment"
@@ -12,20 +12,46 @@
         tools:layout="@layout/fragment_news">
         <action
             android:id="@+id/action_newsFragment_to_webFragment"
-            app:destination="@id/webFragment"
+            app:destination="@id/newsWebFragment"
             app:enterAnim="@anim/enter"
             app:exitAnim="@anim/exit"
             app:popEnterAnim="@anim/popenter"
-            app:popExitAnim="@anim/popexit"/>
+            app:popExitAnim="@anim/popexit" />
     </fragment>
 
     <fragment
-        android:id="@+id/webFragment"
-        android:name="cn.wthee.hi3njetpack.view.WebFragment"
+        android:id="@+id/videoFragment"
+        android:name="cn.wthee.hi3njetpack.view.VideoFragment"
+        android:label="@string/label_video"
+        tools:layout="@layout/fragment_video">
+        <action
+            android:id="@+id/action_videoFragment_to_videoWebFragment"
+            app:destination="@id/videoWebFragment" />
+        <action
+            android:id="@+id/action_videoFragment_to_newsFragment"
+            app:destination="@id/newsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/newsWebFragment"
+        android:name="cn.wthee.hi3njetpack.view.NewsWebFragment"
         android:label="@string/label_web"
-        tools:layout="@layout/fragment_web">
+        tools:layout="@layout/fragment_web_news">
         <argument
             android:name="link"
-            app:argType="string"/>
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/videoWebFragment"
+        android:name="cn.wthee.hi3njetpack.view.VideoWebFragment"
+        android:label="@string/label_web"
+        tools:layout="@layout/fragment_web_video">
+        <argument
+            android:name="link"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            app:argType="string" />
     </fragment>
 </navigation>

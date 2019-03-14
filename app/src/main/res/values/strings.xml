@@ -6,4 +6,6 @@
     <string name="clean">清理缓存</string>
     <string name="label_news"></string>
     <string name="label_web"></string>
+    <string name="label_video"></string>
+    <string name="menu_news">公告信息</string>
 </resources>

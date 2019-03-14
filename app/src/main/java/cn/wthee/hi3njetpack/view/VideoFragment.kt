@@ -1,53 +1,48 @@
 package cn.wthee.hi3njetpack.view
 
+
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.hi3njetpack.R
-import cn.wthee.hi3njetpack.adapters.NewsAdapter
-import cn.wthee.hi3njetpack.databinding.FragmentNewsBinding
+import cn.wthee.hi3njetpack.adapters.VideoAdapter
+import cn.wthee.hi3njetpack.databinding.FragmentVideoBinding
 import cn.wthee.hi3njetpack.util.InjectorUtil
 import cn.wthee.hi3njetpack.util.RecyclerViewUtil
-import cn.wthee.hi3njetpack.viewmodels.NewsViewModel
-import kotlinx.android.synthetic.main.fragment_news.*
+import cn.wthee.hi3njetpack.viewmodels.VideoViewModel
 
-class NewsFragment : Fragment() {
 
-    private lateinit var viewModel: NewsViewModel
+class VideoFragment : Fragment() {
+
+    private lateinit var viewModel: VideoViewModel
     private lateinit var recyclerView: RecyclerView
-    private lateinit var binding: FragmentNewsBinding
+    private lateinit var binding: FragmentVideoBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentNewsBinding.inflate(inflater,container,false)
-        val factory = InjectorUtil.getNewsViewModelFactory()
-        viewModel = ViewModelProviders.of(this,factory).get(NewsViewModel::class.java)
-        recyclerView = binding.root.findViewById(R.id.news_list)
-        val adapter = NewsAdapter()
-        binding.newsList.adapter = adapter
+        binding = FragmentVideoBinding.inflate(inflater,container,false)
+        val factory = InjectorUtil.getVideoViewModelFactory(binding.myWeb)
+        viewModel = VideoViewModel(binding.myWeb,InjectorUtil.getVideoRepository())
+        recyclerView = binding.videoList
+        val adapter = VideoAdapter()
+        binding.videoList.adapter = adapter
         subscribeUi(adapter)
         addListener()
         return binding.root
     }
-
-    private fun subscribeUi(adapter: NewsAdapter) {
-        viewModel.news.observe(viewLifecycleOwner, Observer { news ->
-            if (news != null) {
-                adapter.submitList(news)
+    private fun subscribeUi(adapter: VideoAdapter) {
+        viewModel.video.observe(viewLifecycleOwner, Observer { video ->
+            if (video != null) {
+                adapter.submitList(video)
                 adapter.notifyDataSetChanged()
             }
         })

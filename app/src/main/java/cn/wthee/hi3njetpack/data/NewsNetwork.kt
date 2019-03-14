@@ -47,6 +47,7 @@ class NewsNetwork{
         return isGone
     }
     fun getNews(): MutableLiveData<List<News>>{
+        isGone.postValue(View.VISIBLE)
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 webView.loadUrl("javascript:window.local_obj.loadMore(document.getElementsByTagName('ul')[2].innerHTML);")

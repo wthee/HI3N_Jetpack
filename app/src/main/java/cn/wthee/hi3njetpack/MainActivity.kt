@@ -13,49 +13,95 @@ import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import cn.wthee.hi3njetpack.databinding.ActivityMainBinding
+import cn.wthee.hi3njetpack.view.NewsFragmentDirections
+import cn.wthee.hi3njetpack.view.VideoFragmentDirections
 import com.anbaoyue.manyiwang.utils.CleanUtil
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.ArrayList
+import android.app.Activity
+import cn.wthee.hi3njetpack.util.ActivityUtil
+import java.lang.ref.WeakReference
+import android.os.StrictMode
+import android.view.View
+import com.google.android.material.navigation.NavigationView
+
 
 class MainActivity : AppCompatActivity() {
 
+
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navigationMenu: NavigationView
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    private lateinit var binding :ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
+        // android 7.0系统解决拍照的问题
+        val builder = StrictMode.VmPolicy.Builder()
+        StrictMode.setVmPolicy(builder.build())
+        builder.detectFileUriExposure()
+
+        ActivityUtil.instance.currentActivity = this
         getAuthority()
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         drawerLayout = binding.drawerLayout
-        navController = Navigation.findNavController(this, R.id.graph_nav_fragment)
+        navigationMenu = binding.navigationView
+        navController = Navigation.findNavController(this, R.id.nav_graph)
         appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
 
-        // Set up ActionBar
+        //Set up ActionBar
         setSupportActionBar(binding.toolbar)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+
         // Set up navigation menu
-        binding.navigationView.setupWithNavController(navController)
-        binding.navigationView.menu.findItem(R.id.cleanCaches).title = "清理缓存    " + CleanUtil.getTotalCacheSize(this)
-        var appInfo = binding.navigationView.getHeaderView(0).findViewById<TextView>(R.id.appInfo)
-        var packageInfo = packageManager.getPackageInfo(packageName,0)
-        appInfo.text  = resources.getText(R.string.app_name).toString()+"   版本:"+packageInfo.versionName
-        binding.navigationView.setNavigationItemSelectedListener{
-            when(it.itemId){
-                R.id.cleanCaches ->{
+        navigationMenu.setupWithNavController(navController)
+        navigationMenu.menu.findItem(R.id.cleanCaches).title = "清理缓存    " + CleanUtil.getTotalCacheSize(this)
+        var appInfo = navigationMenu.getHeaderView(0).findViewById<TextView>(R.id.appInfo)
+        var packageInfo = packageManager.getPackageInfo(packageName, 0)
+        appInfo.text = resources.getText(R.string.app_name).toString() + "   版本:" + packageInfo.versionName
+        navigationMenu.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.cleanCaches -> {
                     CleanUtil.clearAllCache(this)
-                    binding.navigationView.menu.findItem(R.id.cleanCaches).title = "清理缓存    " + CleanUtil.getTotalCacheSize(this)
+                    navigationMenu.menu.findItem(R.id.cleanCaches).title =
+                        "清理缓存    " + CleanUtil.getTotalCacheSize(this)
+                    drawerLayout.closeDrawers()
+                }
+                R.id.change ->{
+                    val direction = VideoFragmentDirections.actionVideoFragmentToNewsFragment()
+                    this.findNavController(R.id.nav_graph).navigate(direction)
+                    drawerLayout.closeDrawers()
                 }
             }
             return@setNavigationItemSelectedListener true
         }
+        drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener{
+            override fun onDrawerStateChanged(newState: Int) {
+                return
+            }
+
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+                return
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+                return
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+                navigationMenu.menu.findItem(R.id.cleanCaches).title =
+                    "清理缓存    " + CleanUtil.getTotalCacheSize(MyApplication.context)
+            }
+
+        })
+
     }
 
     private fun getAuthority() {
@@ -72,18 +118,6 @@ class MainActivity : AppCompatActivity() {
         }
         if (mPermissions.size > 0) {
             ActivityCompat.requestPermissions(this, permissions, 1)
-        }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-    }
-
-    override fun onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
         }
     }
 
@@ -108,4 +142,17 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    override fun onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
 }
