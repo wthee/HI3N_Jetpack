@@ -32,6 +32,12 @@ class NewsAdapter : ListAdapter<News, NewsAdapter.ViewHolder>(NewsDiffCallback()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val news = getItem(position)
+        val params = holder.newsImage.layoutParams
+        val metrics = MyApplication.context.resources.displayMetrics
+        params.width = metrics.widthPixels
+        val scale = params.width * 1.0 / 912
+        params.height = (188 * scale).toInt()
+        holder.newsImage.layoutParams = params
         holder.apply {
             bind(createOnClickListener(news!!.link), createOnLongClickListener(news.imgUrl),news)
             itemView.tag = news
@@ -56,7 +62,7 @@ class NewsAdapter : ListAdapter<News, NewsAdapter.ViewHolder>(NewsDiffCallback()
     class ViewHolder(
         private val binding: ItemNewsBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-
+        var newsImage = binding.newsImage
         fun bind(listener: View.OnClickListener, longClickListener: View.OnLongClickListener, item: News) {
             binding.apply {
                 clickListener = listener
