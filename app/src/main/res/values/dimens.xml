@@ -35,5 +35,5 @@
     <dimen name="navigation_drawer_image_width">100dp</dimen>
     <dimen name="text">17sp</dimen>
     <dimen name="text_small">12sp</dimen>
-    <dimen name="fgLine">20dp</dimen>
+    <dimen name="fgLine">15dp</dimen>
 </resources>

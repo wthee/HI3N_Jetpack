@@ -21,7 +21,7 @@
         android:orientation="vertical">
 
         <View
-            android:background="@color/cardbg"
+            android:background="@drawable/fgline"
             android:layout_width="match_parent"
             android:layout_height="@dimen/fgLine"/>
 
