@@ -1,6 +1,5 @@
 package cn.wthee.hi3njetpack.util
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.app.Instrumentation
@@ -12,6 +11,8 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.view.KeyEvent
 import android.view.ViewGroup
 import android.widget.RelativeLayout
@@ -40,17 +41,18 @@ object ImgUtil {
                     Toast.makeText(context,"长按任意位置保存图片",Toast.LENGTH_SHORT).show()
                     var dialog = Dialog(context)
                     dialog.setContentView(getPhotoView(context,url))
-                    dialog.show()
                     dialog.window.setBackgroundDrawable(context.getDrawable(R.drawable.bg))
                     dialog.window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                    dialog.show()
                 }
                 1 -> {
                     ImgUtil.save(context,url,object : GetUri{
                         override fun imgUri(file: File) {
-                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            Looper.prepare()
+                            Toast.makeText(context,"图片已保存",Toast.LENGTH_SHORT).show()
+                            Looper.loop()
                         }
                     })
-                    Toast.makeText(context,"图片已保存",Toast.LENGTH_SHORT).show()
                 }
                 2 ->{
                     ImgUtil.save(context,url,object : GetUri{
@@ -70,6 +72,11 @@ object ImgUtil {
                                     }
                                 }
                             context.startActivity(shareIntent)
+                            Looper.prepare()
+                            Handler().postDelayed({
+                                file.delete()
+                            },30000.toLong())
+                            Looper.loop()
                         }
                     })
                 }
@@ -89,7 +96,7 @@ object ImgUtil {
         var call = okHttpClient.newCall(request)
         call.enqueue(object : Callback{
             override fun onFailure(call: Call, e: IOException) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                return
             }
             override fun onResponse(call: Call, response: Response) {
                 var storePath = Environment.getExternalStorageDirectory ().absolutePath + File.separator + "img"
@@ -131,10 +138,11 @@ object ImgUtil {
             var bmp = pv.drawable as BitmapDrawable
             ImgUtil.save(context,url,object : GetUri{
                 override fun imgUri(file: File) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    Looper.prepare()
+                    Toast.makeText(context,"图片已保存",Toast.LENGTH_SHORT).show()
+                    Looper.loop()
                 }
             })
-            Toast.makeText(context,"图片已保存",Toast.LENGTH_SHORT).show()
             return@setOnLongClickListener true
         }
         return pv

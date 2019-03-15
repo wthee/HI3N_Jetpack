@@ -8,6 +8,6 @@ object RecyclerViewUtil {
         val screenHeight = recyclerView.computeVerticalScrollExtent()
         val scrollHeight = recyclerView.computeVerticalScrollOffset()
         val recyclerViewHeight = recyclerView.computeVerticalScrollRange()
-        return screenHeight + scrollHeight >= recyclerViewHeight * 0.8
+        return screenHeight + scrollHeight >= recyclerViewHeight
     }
 }

@@ -7,7 +7,9 @@ class VideoRepository private constructor(val videoNetwork: VideoNetwork){
     fun getVideo(webView: WebView) = videoNetwork.getVideo(webView)
 
     fun loadNext(webView: WebView) = videoNetwork.loadNext(webView)
+    fun refresh(webView: WebView) = videoNetwork.refresh(webView)
     fun isGone() = videoNetwork.isGone()
+    fun isRefresh() = videoNetwork.isRefresh()
 
     companion object {
 

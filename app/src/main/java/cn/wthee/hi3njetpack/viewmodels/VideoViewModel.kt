@@ -20,5 +20,10 @@ class VideoViewModel (
         this.video = repository.loadNext(webView)
     }
 
+    fun refresh(){
+        this.video = repository.refresh(webView)
+    }
+
     var isGone: LiveData<Int> = repository.isGone()
+    var isRefresh: LiveData<Boolean> = repository.isRefresh()
 }

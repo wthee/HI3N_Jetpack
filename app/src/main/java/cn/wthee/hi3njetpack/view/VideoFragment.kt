@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import cn.wthee.hi3njetpack.R
 import cn.wthee.hi3njetpack.adapters.VideoAdapter
 import cn.wthee.hi3njetpack.databinding.FragmentVideoBinding
@@ -23,6 +24,7 @@ class VideoFragment : Fragment() {
 
     private lateinit var viewModel: VideoViewModel
     private lateinit var recyclerView: RecyclerView
+    private lateinit var swip: SwipeRefreshLayout
     private lateinit var binding: FragmentVideoBinding
 
     override fun onCreateView(
@@ -33,12 +35,14 @@ class VideoFragment : Fragment() {
         val factory = InjectorUtil.getVideoViewModelFactory(binding.myWeb)
         viewModel = VideoViewModel(binding.myWeb,InjectorUtil.getVideoRepository())
         recyclerView = binding.videoList
+        swip = binding.videoSwipe
         val adapter = VideoAdapter()
         binding.videoList.adapter = adapter
         subscribeUi(adapter)
         addListener()
         return binding.root
     }
+
     private fun subscribeUi(adapter: VideoAdapter) {
         viewModel.video.observe(viewLifecycleOwner, Observer { video ->
             if (video != null) {
@@ -48,6 +52,9 @@ class VideoFragment : Fragment() {
         })
         viewModel.isGone.observe(viewLifecycleOwner, Observer {
             (activity as AppCompatActivity).findViewById<ProgressBar>(R.id.web_pb).visibility = it
+        })
+        viewModel.isRefresh.observe(viewLifecycleOwner, Observer {
+            swip.isRefreshing = it
         })
     }
 
@@ -60,6 +67,10 @@ class VideoFragment : Fragment() {
                 }
             }
         })
+
+        swip.setOnRefreshListener {
+            viewModel.refresh()
+        }
     }
 
 }

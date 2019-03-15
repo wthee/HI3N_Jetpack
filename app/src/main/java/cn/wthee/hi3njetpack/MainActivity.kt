@@ -31,7 +31,6 @@ import android.os.StrictMode
 import android.util.Log
 import android.view.View
 import com.google.android.material.navigation.NavigationView
-import com.tencent.smtt.sdk.QbSdk
 
 
 class MainActivity : AppCompatActivity() {
@@ -45,11 +44,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
+        //file-->Uri分享
+        val builder = StrictMode.VmPolicy.Builder()
+        StrictMode.setVmPolicy(builder.build())
+        builder.detectFileUriExposure()
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         ActivityUtil.instance.currentActivity = this
         getAuthority()
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         drawerLayout = binding.drawerLayout
         navigationMenu = binding.navigationView
         navController = Navigation.findNavController(this, R.id.nav_graph)

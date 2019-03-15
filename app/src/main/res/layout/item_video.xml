@@ -39,8 +39,8 @@
                 android:layout_margin="2dp"
                 android:layout_gravity="right|bottom"
                 android:textStyle="bold"
-                android:textColor="#ffffff"
-                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_small"
                 android:text="@{video.length}"/>
         </FrameLayout>
 
@@ -59,7 +59,7 @@
                 android:maxLines="2"
                 android:ellipsize="end"
                 android:textColor="@color/text"
-                android:textSize="16sp"
+                android:textSize="@dimen/text"
                 android:text="@{video.title}"/>
 
             <LinearLayout
@@ -73,7 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="bottom|left"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/text_small"
                     android:text="@{video.uper}"/>
 
                 <TextView
@@ -81,7 +81,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="bottom|left"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/text_small"
                     android:text="@{video.watchNum}"/>
 
                 <TextView
@@ -89,7 +89,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="bottom|left"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/text_small"
                     android:text="@{video.danmuNum}"/>
 
                 <TextView
@@ -97,7 +97,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="bottom|right"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/text_small"
                     android:text="@{video.date}"/>
 
             </LinearLayout>
@@ -106,7 +106,8 @@
         <View
             android:background="@color/cardbg"
             android:layout_width="match_parent"
-            android:layout_height="12dp"/>
+            android:layout_height="@dimen/fgLine"/>
+
     </RelativeLayout>
 
 

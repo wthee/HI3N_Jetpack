@@ -8,22 +8,22 @@ import cn.wthee.hi3njetpack.databinding.FragmentWebVideoBinding
 import cn.wthee.hi3njetpack.util.ImgUtil
 import android.os.Build
 import android.view.*
+import android.webkit.WebChromeClient
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ShareCompat
 import cn.wthee.hi3njetpack.R
 import android.widget.FrameLayout
-import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient
-import com.tencent.smtt.sdk.WebChromeClient
-import com.tencent.smtt.sdk.WebSettings
-import com.tencent.smtt.sdk.WebView
-import com.tencent.smtt.sdk.WebViewClient
+import im.delight.android.webview.AdvancedWebView
 
 
 class VideoWebFragment : Fragment() {
 
 
-    private lateinit var webView: com.tencent.smtt.sdk.WebView
+    private lateinit var webView: AdvancedWebView
     private lateinit var binding: FragmentWebVideoBinding
     private lateinit var mActivity: AppCompatActivity
     private lateinit var toolbar: Toolbar
@@ -31,9 +31,9 @@ class VideoWebFragment : Fragment() {
     private lateinit var mTitle: String
     private var customView: View? = null
     private var fullscreenContainer: FrameLayout? = null
-    protected val COVER_SCREEN_PARAMS =
+    private val COVER_SCREEN_PARAMS =
         FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-    private var customViewCallback: IX5WebChromeClient.CustomViewCallback? = null
+    private var customViewCallback: WebChromeClient.CustomViewCallback? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +46,6 @@ class VideoWebFragment : Fragment() {
         binding = FragmentWebVideoBinding.inflate(inflater, container, false)
         webView = binding.webView
         toolbar = mActivity.findViewById(R.id.toolbar)
-        //showWeb(webView, mLink)
         initWebView()
         webView.setOnLongClickListener {
             var hitTestResult = webView.hitTestResult
@@ -68,22 +67,10 @@ class VideoWebFragment : Fragment() {
         //toolbar.title = mActivity.getText(R.string.app_name)
     }
 
-    private fun showWeb(webView: WebView, url: String) {
-
-        webView.loadUrl(url)
-    }
-
 
     private fun initWebView() {
-        val wvcc = com.tencent.smtt.sdk.WebChromeClient()
-        val webSettings = webView.settings
+        val wvcc = WebChromeClient()
         setDesktopMode(true)
-        webSettings.javaScriptEnabled = true
-        webSettings.useWideViewPort = true // 关键点
-        webSettings.allowFileAccess = true // 允许访问文件
-        webSettings.setSupportZoom(true) // 支持缩放
-        webSettings.loadWithOverviewMode = true
-        webSettings.cacheMode = WebSettings.LOAD_NO_CACHE // 不加载缓存内容
 
         webView.webChromeClient = wvcc
         val wvc = object : WebViewClient() {
@@ -95,7 +82,6 @@ class VideoWebFragment : Fragment() {
         webView.webViewClient = wvc
 
         webView.webChromeClient = object : WebChromeClient() {
-
             /*** 视频播放相关的方法  */
             override fun getVideoLoadingProgressView(): View? {
                 val frameLayout = binding.videoWebFragment
@@ -104,7 +90,7 @@ class VideoWebFragment : Fragment() {
                 return frameLayout
             }
 
-            override fun onShowCustomView(view: View, callback: IX5WebChromeClient.CustomViewCallback) {
+            override fun onShowCustomView(view: View, callback: WebChromeClient.CustomViewCallback) {
                 showCustomView(view, callback)
             }
 
@@ -112,30 +98,31 @@ class VideoWebFragment : Fragment() {
                 hideCustomView()
             }
         }
-
         // 加载Web地址
         webView.loadUrl(mLink)
     }
 
-    fun setDesktopMode(enabled: Boolean) {
+    private fun setDesktopMode(enabled: Boolean) {
         val webSettings = webView.getSettings()
-
         val newUserAgent: String
         if (enabled) {
-            newUserAgent = webSettings.getUserAgentString().replace("Mobile", "eliboM").replace("Android", "diordnA")
+            newUserAgent = webSettings.userAgentString.replace("Mobile", "eliboM").replace("Android", "diordnA")
         } else {
-            newUserAgent = webSettings.getUserAgentString().replace("eliboM", "Mobile").replace("diordnA", "Android")
+            newUserAgent = webSettings.userAgentString.replace("eliboM", "Mobile").replace("diordnA", "Android")
         }
-
-        webSettings.setUserAgentString(newUserAgent)
-        webSettings.setUseWideViewPort(enabled)
-        webSettings.setLoadWithOverviewMode(enabled)
-        webSettings.setSupportZoom(enabled)
-        webSettings.setBuiltInZoomControls(enabled)
+        webSettings.userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36"
+        webSettings.loadWithOverviewMode = enabled
+        webSettings.builtInZoomControls = enabled
+        webSettings.javaScriptEnabled = enabled
+        webSettings.useWideViewPort = enabled // 关键点
+        webSettings.allowFileAccess = enabled // 允许访问文件
+        webSettings.setSupportZoom(enabled) // 支持缩放
+        webSettings.cacheMode = WebSettings.LOAD_NO_CACHE // 不加载缓存内容
+        webView.setInitialScale(150)
     }
 
     /** 视频播放全屏  */
-    private fun showCustomView(view: View, callback: IX5WebChromeClient.CustomViewCallback) {
+    private fun showCustomView(view: View, callback: WebChromeClient.CustomViewCallback) {
         // if a view already exists then immediately terminate the new one
         if (customView != null) {
             callback.onCustomViewHidden()
@@ -144,7 +131,7 @@ class VideoWebFragment : Fragment() {
 
         mActivity.getWindow().getDecorView()
 
-        val decor = mActivity.getWindow().getDecorView() as FrameLayout
+        val decor = mActivity.window.decorView as FrameLayout
         fullscreenContainer = FullscreenHolder(binding.root.context)
         (fullscreenContainer as FullscreenHolder).addView(view, COVER_SCREEN_PARAMS)
         decor.addView(fullscreenContainer, COVER_SCREEN_PARAMS)
@@ -160,7 +147,7 @@ class VideoWebFragment : Fragment() {
         }
 
         setStatusBarVisibility(true)
-        val decor = mActivity.getWindow().getDecorView() as FrameLayout
+        val decor = mActivity.window.decorView as FrameLayout
         decor.removeView(fullscreenContainer)
         fullscreenContainer = null
         customView = null
@@ -172,7 +159,7 @@ class VideoWebFragment : Fragment() {
     internal class FullscreenHolder(ctx: Context) : FrameLayout(ctx) {
 
         init {
-            setBackgroundColor(ctx.getResources().getColor(android.R.color.black))
+            setBackgroundColor(ctx.resources.getColor(android.R.color.black))
         }
 
         override fun onTouchEvent(evt: MotionEvent): Boolean {
@@ -182,7 +169,7 @@ class VideoWebFragment : Fragment() {
 
     private fun setStatusBarVisibility(visible: Boolean) {
         val flag = if (visible) 0 else WindowManager.LayoutParams.FLAG_FULLSCREEN
-        mActivity.getWindow().setFlags(flag, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        mActivity.window.setFlags(flag, WindowManager.LayoutParams.FLAG_FULLSCREEN)
     }
 
 

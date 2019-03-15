@@ -20,6 +20,11 @@
         android:onClick="@{clickListener}"
         android:orientation="vertical">
 
+        <View
+            android:background="@color/cardbg"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/fgLine"/>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -46,6 +51,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="4"
                     android:text="@{news.title}"
+                    android:textColor="@color/text"
+                    android:textSize="@dimen/text"
                     android:gravity="bottom|start" />
 
                 <TextView
@@ -56,15 +63,10 @@
                     android:text="@{news.date}"
                     android:textStyle="bold"
                     android:gravity="bottom|end"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/text_small" />
 
             </LinearLayout>
         </RelativeLayout>
-
-        <View
-            android:background="#ECECEC"
-            android:layout_width="match_parent"
-            android:layout_height="12dp"/>
 
     </LinearLayout>
 

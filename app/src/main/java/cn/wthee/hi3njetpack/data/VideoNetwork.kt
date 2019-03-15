@@ -26,7 +26,7 @@ class VideoNetwork{
     private val dateRegex = "\\d{4}-\\d{2}-\\d{2}"
     private val uperRegex = "class=\"up-name\">.*?</a>"
     private val watchNumRegex = "^\\s*\\d+\$|^.*?万\$"
-    private val lengthRegex = "^\\s*\\d+:\\d+\$"
+    private val lengthRegex = "^\\s*\\d+(:\\d+){1,}\$"
 
     private val pattern1 = Pattern.compile(urlRegex, Pattern.CASE_INSENSITIVE)
     private val pattern2 = Pattern.compile(titleRegex, Pattern.CASE_INSENSITIVE)
@@ -43,12 +43,28 @@ class VideoNetwork{
     private var videoList : ArrayList<Video> = arrayListOf()
 
     private var isGone: MutableLiveData<Int> = MutableLiveData()
+    private var isRefresh: MutableLiveData<Boolean> = MutableLiveData()
 
-    private val url = "https://search.bilibili.com/all?keyword=%E5%B4%A9%E5%9D%8F3&from_source=banner_search&order=dm&duration=0&tids_1=0&single_column=0&page="
+    private val url = "https://search.bilibili.com/all?keyword=%E5%B4%A9%E5%9D%8F3&from_source=banner_search&spm_id_from=333.334.b_62616e6e65725f6c696e6b.1&order=pubdate&duration=0&tids_1=0&page="
 
     fun isGone(): LiveData<Int>{
         return isGone
     }
+
+    fun isRefresh(): LiveData<Boolean>{
+        return isRefresh
+    }
+
+    fun load(webView: WebView){
+        webView.loadUrl(url+page)
+        webView.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                webView.loadUrl("javascript:window.local_obj.loadMore(document.getElementsByTagName('ul')[" + 10 + "].innerHTML);")
+
+            }
+        }
+    }
+
     fun getVideo(webView: WebView): MutableLiveData<List<Video>>{
         isGone.postValue(View.VISIBLE)
         webView.settings.javaScriptEnabled = true
@@ -56,26 +72,22 @@ class VideoNetwork{
         webView.settings.loadWithOverviewMode = true
         webView.settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN
         webView.addJavascriptInterface(InJavaScriptLocalObj(), "local_obj")
-        webView.loadUrl(url+page)
-        webView.webViewClient = object : WebViewClient() {
-            override fun onPageFinished(view: WebView?, url: String?) {
-                webView.loadUrl("javascript:window.local_obj.loadMore(document.getElementsByTagName('ul')[" + 10 + "].innerHTML);")
-
-            }
-        }
+        load(webView)
         return newData
     }
     fun loadNext(webView: WebView): MutableLiveData<List<Video>>{
         page++
-        webView.loadUrl(url+page)
-        webView.webViewClient = object : WebViewClient() {
-            override fun onPageFinished(view: WebView?, url: String?) {
-                webView.loadUrl("javascript:window.local_obj.loadMore(document.getElementsByTagName('ul')[" + 10 + "].innerHTML);")
-            }
-        }
+        load(webView)
         return newData
     }
 
+    fun refresh(webView: WebView): MutableLiveData<List<Video>>{
+        page = 1
+        videoList.clear()
+        isRefresh.postValue(true)
+        load(webView)
+        return newData
+    }
 
 
     internal inner class InJavaScriptLocalObj {
@@ -164,6 +176,7 @@ class VideoNetwork{
             num = 0
             newData.postValue(videoList)
             isGone.postValue(View.GONE)
+            isRefresh.postValue(false)
         }
     }
 

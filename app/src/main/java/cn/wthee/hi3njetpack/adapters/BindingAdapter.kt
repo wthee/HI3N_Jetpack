@@ -10,7 +10,7 @@ import com.bumptech.glide.request.RequestOptions
 @BindingAdapter("imageFromUrl")
 fun bindImageFromUrl(view: ImageView, imageUrl: String?) {
     if (!imageUrl.isNullOrEmpty()) {
-        var requestOptions = RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)
+        var requestOptions = RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC)
         Glide.with(view.context)
             .load(imageUrl)
             .apply(requestOptions)

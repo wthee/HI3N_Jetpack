@@ -34,8 +34,8 @@ class VideoAdapter : ListAdapter<Video, VideoAdapter.ViewHolder>(VideoDiffCallba
         val params = holder.videoImg.layoutParams
         val metrics = MyApplication.context.resources.displayMetrics
         params.width = metrics.widthPixels
-        val scale = params.width * 1.0 / 320
-        params.height = (200 * scale).toInt()
+        val scale = params.width * 1.0 / 168
+        params.height = (100 * scale).toInt()
         holder.videoImg.layoutParams = params
         holder.apply {
             bind(createOnClickListener(video!!.url,video.title), createOnLongClickListener(video.imgurl),video)
