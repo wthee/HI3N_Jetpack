@@ -24,11 +24,14 @@ import cn.wthee.hi3njetpack.view.VideoFragmentDirections
 import com.anbaoyue.manyiwang.utils.CleanUtil
 import java.util.ArrayList
 import android.app.Activity
+import android.graphics.PixelFormat
 import cn.wthee.hi3njetpack.util.ActivityUtil
 import java.lang.ref.WeakReference
 import android.os.StrictMode
+import android.util.Log
 import android.view.View
 import com.google.android.material.navigation.NavigationView
+import com.tencent.smtt.sdk.QbSdk
 
 
 class MainActivity : AppCompatActivity() {
@@ -42,10 +45,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // android 7.0系统解决拍照的问题
-        val builder = StrictMode.VmPolicy.Builder()
-        StrictMode.setVmPolicy(builder.build())
-        builder.detectFileUriExposure()
+
 
         ActivityUtil.instance.currentActivity = this
         getAuthority()
