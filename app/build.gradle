@@ -10,11 +10,11 @@ android {
         enabled = true
     }
     defaultConfig {
-        applicationId "cn.wthee.hi3njetpack"
+        applicationId "cn.wthee.hi3nlite"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 8
+        versionName "2.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary true
     }

@@ -1,23 +1,19 @@
 package cn.wthee.hi3njetpack.data
 
-import android.app.AlertDialog
+
 import android.os.Handler
+import android.util.Log
 import android.view.View
-import android.webkit.JavascriptInterface
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import cn.wthee.hi3njetpack.MyApplication
-import cn.wthee.hi3njetpack.util.NetWorkUtil
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.ArrayList
 import java.util.regex.Pattern
 
 
-class VideoNetwork{
+class VideoNetwork {
 
 
     private val urlRegex = "href=\".*? target=\"_blank\" class=\"title\""
@@ -37,51 +33,53 @@ class VideoNetwork{
     private val pattern7 = Pattern.compile(lengthRegex, Pattern.CASE_INSENSITIVE)
 
     private var num = 0
-    private var page:Int = 1
+    private var page: Int = 1
 
     private var newData: MutableLiveData<List<Video>> = MutableLiveData()
-    private var videoList : ArrayList<Video> = arrayListOf()
+    private var videoList: ArrayList<Video> = arrayListOf()
 
     private var isGone: MutableLiveData<Int> = MutableLiveData()
     private var isRefresh: MutableLiveData<Boolean> = MutableLiveData()
 
-    private val url = "https://search.bilibili.com/all?keyword=%E5%B4%A9%E5%9D%8F3&from_source=banner_search&spm_id_from=333.334.b_62616e6e65725f6c696e6b.1&order=pubdate&duration=0&tids_1=0&page="
+    private val url =
+        "https://search.bilibili.com/all?keyword=%E5%B4%A9%E5%9D%8F3&from_source=banner_search&spm_id_from=333.334.b_62616e6e65725f6c696e6b.1&order=pubdate&duration=0&tids_1=0&page="
 
-    fun isGone(): LiveData<Int>{
+    fun isGone(): LiveData<Int> {
         return isGone
     }
 
-    fun isRefresh(): LiveData<Boolean>{
+    fun isRefresh(): LiveData<Boolean> {
         return isRefresh
     }
 
-    fun load(webView: WebView){
-        webView.loadUrl(url+page)
+    private fun load(webView: WebView) {
+        webView.loadUrl(url + page)
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
-                webView.loadUrl("javascript:window.local_obj.loadMore(document.getElementsByTagName('ul')[" + 10 + "].innerHTML);")
-
+                webView.loadUrl("javascript:window.local_obj.loadMore(document.getElementsByTagName('ul')[" + 10 + "].innerHTML+document.getElementsByTagName('ul')[" + 9 + "].innerHTML);")
             }
         }
     }
 
-    fun getVideo(webView: WebView): MutableLiveData<List<Video>>{
-        isGone.postValue(View.VISIBLE)
+    fun initVideo(webView: WebView): MutableLiveData<List<Video>> {
         webView.settings.javaScriptEnabled = true
         webView.settings.useWideViewPort = true
+        webView.settings.domStorageEnabled = true
         webView.settings.loadWithOverviewMode = true
         webView.settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN
         webView.addJavascriptInterface(InJavaScriptLocalObj(), "local_obj")
         load(webView)
         return newData
     }
-    fun loadNext(webView: WebView): MutableLiveData<List<Video>>{
+
+    fun loadNext(webView: WebView): MutableLiveData<List<Video>> {
+        isGone.postValue(View.VISIBLE)
         page++
         load(webView)
         return newData
     }
 
-    fun refresh(webView: WebView): MutableLiveData<List<Video>>{
+    fun refresh(webView: WebView): MutableLiveData<List<Video>> {
         page = 1
         videoList.clear()
         isRefresh.postValue(true)
@@ -143,13 +141,13 @@ class VideoNetwork{
                     val uper = str.substring(indexStart, endIndex)
                     upers.add(uper)
                 }
-                while (matcher6.find()){
+                while (matcher6.find()) {
                     val str = matcher6.group()
                     val times = str.trim()
-                    if(flag){
+                    if (flag) {
                         watchNums.add(times)
                         flag = false
-                    }else {
+                    } else {
                         danmuNums.add(times)
                         flag = true
                     }
@@ -162,15 +160,19 @@ class VideoNetwork{
             }
 
             while (num < urls.size) {
-                var video = Video("https:"+urls[num],
+                var video = Video(
+                    "https:" + urls[num],
                     titles[num],
-                    "https://"+imgs[num],
+                    "https://" + imgs[num],
                     dates[num],
-                    upers[num]+"·",
-                    watchNums[num]+"次播放·",
-                    danmuNums[num]+"弹幕",
-                    lengths[num])
-                videoList.add(video)
+                    upers[num] + "·",
+                    watchNums[num] + "次播放·",
+                    danmuNums[num] + "弹幕",
+                    lengths[num]
+                )
+                if (!videoList.contains(video)) {
+                    videoList.add(video)
+                }
                 num++
             }
             num = 0
@@ -182,9 +184,10 @@ class VideoNetwork{
 
     companion object {
 
-        @Volatile private var instance: VideoNetwork? = null
+        @Volatile
+        private var instance: VideoNetwork? = null
 
-        fun getInstance()  = instance ?: synchronized(this){
+        fun getInstance() = instance ?: synchronized(this) {
             instance ?: VideoNetwork().also { instance = it }
         }
     }

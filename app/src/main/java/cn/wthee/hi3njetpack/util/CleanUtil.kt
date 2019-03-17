@@ -54,9 +54,9 @@ object CleanUtil {
             for (i in fileList.indices) {
                 // 如果下面还有文件
                 if (fileList[i].isDirectory) {
-                    size = size + getFolderSize(fileList[i])
+                    size += getFolderSize(fileList[i])
                 } else {
-                    size = size + fileList[i].length()
+                    size += fileList[i].length()
                 }
             }
         } catch (e: Exception) {
@@ -73,7 +73,8 @@ object CleanUtil {
     fun getFormatSize(size: Double): String {
         val kiloByte = size / 1024
         if (kiloByte < 1) {
-            return size.toString() + "Byte"
+            //return size.toString() + "Byte"
+            return size.toString() + "KB"
         }
 
         val megaByte = kiloByte / 1024

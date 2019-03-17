@@ -12,7 +12,7 @@ import cn.wthee.hi3njetpack.MyApplication
 import cn.wthee.hi3njetpack.R
 import cn.wthee.hi3njetpack.data.Video
 import cn.wthee.hi3njetpack.databinding.ItemVideoBinding
-import cn.wthee.hi3njetpack.util.ImgUtil
+import cn.wthee.hi3njetpack.util.PreviewPicUtil
 import cn.wthee.hi3njetpack.view.VideoFragmentDirections
 
 class VideoAdapter : ListAdapter<Video, VideoAdapter.ViewHolder>(VideoDiffCallback()) {
@@ -53,7 +53,7 @@ class VideoAdapter : ListAdapter<Video, VideoAdapter.ViewHolder>(VideoDiffCallba
 
     private fun createOnLongClickListener(imgurl: String): View.OnLongClickListener {
         return View.OnLongClickListener {
-            ImgUtil.check(it.context, imgurl)
+            PreviewPicUtil.check(it.context, imgurl)
             return@OnLongClickListener true
         }
     }

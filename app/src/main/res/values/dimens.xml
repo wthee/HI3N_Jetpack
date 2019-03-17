@@ -36,4 +36,6 @@
     <dimen name="text">17sp</dimen>
     <dimen name="text_small">12sp</dimen>
     <dimen name="fgLine">15dp</dimen>
+    <dimen name="topSize">30dp</dimen>
+    <dimen name="top_button_margin_bottom">50dp</dimen>
 </resources>

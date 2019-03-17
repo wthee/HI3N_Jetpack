@@ -1,6 +1,5 @@
 package cn.wthee.hi3njetpack.data
 
-import android.opengl.Visibility
 import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
@@ -36,33 +35,42 @@ class NewsNetwork{
     private var webView = NetWorkUtil.createWebView()
 
     private var isGone: MutableLiveData<Int> = MutableLiveData()
+    private var isRefresh: MutableLiveData<Boolean> = MutableLiveData()
 
-    init {
-        webView.settings.javaScriptEnabled = true
-        webView.addJavascriptInterface(InJavaScriptLocalObj(), "local_obj")
-        webView.loadUrl("https://www.bh3.com/index.php/news/")
-    }
 
     fun isGone(): LiveData<Int>{
         return isGone
     }
+    fun isRefresh(): LiveData<Boolean>{
+        return isRefresh
+    }
     fun getNews(): MutableLiveData<List<News>>{
-        isGone.postValue(View.VISIBLE)
+        webView.settings.javaScriptEnabled = true
+        webView.addJavascriptInterface(InJavaScriptLocalObj(), "local_obj")
+        webView.loadUrl("https://www.bh3.com/index.php/news/")
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 webView.loadUrl("javascript:window.local_obj.loadMore(document.getElementsByTagName('ul')[2].innerHTML);")
+
                 super.onPageFinished(view, url)
             }
         }
         return newData
     }
     fun loadNext(): MutableLiveData<List<News>>{
+        isGone.postValue(View.VISIBLE)
         webView.loadUrl("javascript:\$('#more_btn').click()")
         webView.loadUrl("javascript:window.local_obj.loadMore(document.getElementsByTagName('ul')[2].innerHTML);")
         return newData
     }
 
-
+    fun refresh(): MutableLiveData<List<News>>{
+        newsList.clear()
+        isRefresh.postValue(true)
+        num = 0
+        webView.loadUrl("javascript:window.local_obj.loadMore(document.getElementsByTagName('ul')[2].innerHTML);")
+        return newData
+    }
 
     internal inner class InJavaScriptLocalObj {
         @JavascriptInterface
@@ -112,6 +120,7 @@ class NewsNetwork{
             }
             newData.postValue(newsList)
             isGone.postValue(View.GONE)
+            isRefresh.postValue(false)
         }
     }
 

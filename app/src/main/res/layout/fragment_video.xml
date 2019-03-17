@@ -29,6 +29,15 @@
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
+        <ImageView
+            android:id="@+id/video_goTop"
+            android:layout_width="@dimen/topSize"
+            android:layout_height="@dimen/topSize"
+            android:visibility="gone"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="@dimen/top_button_margin_bottom"
+            android:background="@drawable/br_up" />
+
     </FrameLayout>
 
 

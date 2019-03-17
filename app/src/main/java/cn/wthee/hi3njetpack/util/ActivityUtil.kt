@@ -1,28 +1,25 @@
 package cn.wthee.hi3njetpack.util
 
 
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 
 import java.lang.ref.WeakReference
 
-/**
- * Created by zhoujian on 2018/1/19.
- */
 
 class ActivityUtil private constructor() {
 
-    private var sCurrentActivityWeakRef: WeakReference<Activity>? = null
+    private var sCurrentActivityWeakRef: WeakReference<AppCompatActivity>? = null
 
-    var currentActivity: Activity?
+    var currentActivity: AppCompatActivity?
         get() {
-            var currentActivity: Activity? = null
+            var currentActivity: AppCompatActivity? = null
             if (sCurrentActivityWeakRef != null) {
                 currentActivity = sCurrentActivityWeakRef!!.get()
             }
             return currentActivity
         }
         set(activity) {
-            sCurrentActivityWeakRef = WeakReference<Activity>(activity)
+            sCurrentActivityWeakRef = WeakReference<AppCompatActivity>(activity)
         }
 
     companion object {

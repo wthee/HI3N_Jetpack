@@ -3,7 +3,6 @@ package cn.wthee.hi3njetpack.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -13,7 +12,7 @@ import cn.wthee.hi3njetpack.MyApplication
 import cn.wthee.hi3njetpack.R
 import cn.wthee.hi3njetpack.data.News
 import cn.wthee.hi3njetpack.databinding.ItemNewsBinding
-import cn.wthee.hi3njetpack.util.ImgUtil
+import cn.wthee.hi3njetpack.util.PreviewPicUtil
 import cn.wthee.hi3njetpack.view.NewsFragmentDirections
 
 class NewsAdapter : ListAdapter<News, NewsAdapter.ViewHolder>(NewsDiffCallback()) {
@@ -53,7 +52,7 @@ class NewsAdapter : ListAdapter<News, NewsAdapter.ViewHolder>(NewsDiffCallback()
 
     private fun createOnLongClickListener(link: String): View.OnLongClickListener {
         return View.OnLongClickListener {
-            ImgUtil.check(it.context, link)
+            PreviewPicUtil.check(it.context, link)
             return@OnLongClickListener true
         }
     }

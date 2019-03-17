@@ -26,10 +26,18 @@
         tools:layout="@layout/fragment_video">
         <action
             android:id="@+id/action_videoFragment_to_videoWebFragment"
-            app:destination="@id/videoWebFragment" />
+            app:destination="@id/videoWebFragment"
+            app:enterAnim="@anim/enter"
+            app:exitAnim="@anim/exit"
+            app:popEnterAnim="@anim/popenter"
+            app:popExitAnim="@anim/popexit" />
         <action
             android:id="@+id/action_videoFragment_to_newsFragment"
-            app:destination="@id/newsFragment" />
+            app:destination="@id/newsFragment"
+            app:enterAnim="@anim/enter_change"
+            app:exitAnim="@anim/exit_change"
+            app:popEnterAnim="@anim/popenter_change"
+            app:popExitAnim="@anim/popexit_change" />
     </fragment>
 
     <fragment

@@ -6,7 +6,7 @@ import android.os.Handler
 import android.view.*
 import androidx.fragment.app.Fragment
 import cn.wthee.hi3njetpack.databinding.FragmentWebNewsBinding
-import cn.wthee.hi3njetpack.util.ImgUtil
+import cn.wthee.hi3njetpack.util.PreviewPicUtil
 import android.os.Build
 import android.webkit.*
 import android.widget.ImageView
@@ -48,14 +48,14 @@ class NewsWebFragment : Fragment() {
             var hitTestResult = webView.hitTestResult
             if (hitTestResult.type == WebView.HitTestResult.IMAGE_TYPE ||
                 hitTestResult.type == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
-                ImgUtil.check(binding.root.context,hitTestResult.extra)
+                PreviewPicUtil.check(binding.root.context,hitTestResult.extra)
                 return@setOnLongClickListener true
             }
             return@setOnLongClickListener false;
         }
 
         web_pv.setOnLongClickListener{
-            ImgUtil.check(binding.root.context,imgurl)
+            PreviewPicUtil.check(binding.root.context,imgurl)
             return@setOnLongClickListener true
         }
         return binding.root

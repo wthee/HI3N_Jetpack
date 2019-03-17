@@ -2,10 +2,11 @@ package cn.wthee.hi3njetpack.view
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import cn.wthee.hi3njetpack.databinding.FragmentWebVideoBinding
-import cn.wthee.hi3njetpack.util.ImgUtil
+import cn.wthee.hi3njetpack.util.PreviewPicUtil
 import android.os.Build
 import android.view.*
 import android.webkit.WebChromeClient
@@ -47,32 +48,14 @@ class VideoWebFragment : Fragment() {
         webView = binding.webView
         toolbar = mActivity.findViewById(R.id.toolbar)
         initWebView()
-        webView.setOnLongClickListener {
-            var hitTestResult = webView.hitTestResult
-            if (hitTestResult.type == WebView.HitTestResult.IMAGE_TYPE ||
-                hitTestResult.type == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE
-            ) {
-                ImgUtil.check(binding.root.context, hitTestResult.extra)
-                return@setOnLongClickListener true
-            }
-            return@setOnLongClickListener false;
-        }
-
         return binding.root
     }
 
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        //toolbar.title = mActivity.getText(R.string.app_name)
-    }
-
-
     private fun initWebView() {
-        val wvcc = WebChromeClient()
+
         setDesktopMode(true)
 
-        webView.webChromeClient = wvcc
         val wvc = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                 webView.loadUrl(url)
@@ -85,8 +68,7 @@ class VideoWebFragment : Fragment() {
             /*** 视频播放相关的方法  */
             override fun getVideoLoadingProgressView(): View? {
                 val frameLayout = binding.videoWebFragment
-                frameLayout.layoutParams =
-                    ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                frameLayout.layoutParams = COVER_SCREEN_PARAMS
                 return frameLayout
             }
 
@@ -98,18 +80,36 @@ class VideoWebFragment : Fragment() {
                 hideCustomView()
             }
         }
+
+        webView.setOnKeyListener { v, keyCode, event ->
+            if ((keyCode == KeyEvent.KEYCODE_BACK)){
+                if (customView != null) {
+                    hideCustomView()
+                } else if (webView.canGoBack()) {
+                    webView.goBack()
+                }else{
+                    return@setOnKeyListener false
+                }
+                return@setOnKeyListener true
+            }
+            return@setOnKeyListener false
+        }
+        webView.setOnLongClickListener {
+            var hitTestResult = webView.hitTestResult
+            if (hitTestResult.type == WebView.HitTestResult.IMAGE_TYPE ||
+                hitTestResult.type == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE
+            ) {
+                PreviewPicUtil.check(binding.root.context, hitTestResult.extra)
+                return@setOnLongClickListener true
+            }
+            return@setOnLongClickListener false;
+        }
         // 加载Web地址
         webView.loadUrl(mLink)
     }
 
     private fun setDesktopMode(enabled: Boolean) {
-        val webSettings = webView.getSettings()
-        val newUserAgent: String
-        if (enabled) {
-            newUserAgent = webSettings.userAgentString.replace("Mobile", "eliboM").replace("Android", "diordnA")
-        } else {
-            newUserAgent = webSettings.userAgentString.replace("eliboM", "Mobile").replace("diordnA", "Android")
-        }
+        val webSettings = webView.settings
         webSettings.userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36"
         webSettings.loadWithOverviewMode = enabled
         webSettings.builtInZoomControls = enabled
@@ -117,6 +117,7 @@ class VideoWebFragment : Fragment() {
         webSettings.useWideViewPort = enabled // 关键点
         webSettings.allowFileAccess = enabled // 允许访问文件
         webSettings.setSupportZoom(enabled) // 支持缩放
+        webSettings.displayZoomControls = false
         webSettings.cacheMode = WebSettings.LOAD_NO_CACHE // 不加载缓存内容
         webView.setInitialScale(150)
     }
@@ -128,8 +129,6 @@ class VideoWebFragment : Fragment() {
             callback.onCustomViewHidden()
             return
         }
-
-        mActivity.getWindow().getDecorView()
 
         val decor = mActivity.window.decorView as FrameLayout
         fullscreenContainer = FullscreenHolder(binding.root.context)
@@ -145,7 +144,6 @@ class VideoWebFragment : Fragment() {
         if (customView == null) {
             return
         }
-
         setStatusBarVisibility(true)
         val decor = mActivity.window.decorView as FrameLayout
         decor.removeView(fullscreenContainer)
@@ -168,27 +166,16 @@ class VideoWebFragment : Fragment() {
     }
 
     private fun setStatusBarVisibility(visible: Boolean) {
-        val flag = if (visible) 0 else WindowManager.LayoutParams.FLAG_FULLSCREEN
-        mActivity.window.setFlags(flag, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        if(visible){
+            //竖屏
+            mActivity.window.setFlags(0, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            mActivity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }else{
+            //横屏
+            mActivity.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            mActivity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
     }
-
-
-//    override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
-//        when (keyCode) {
-//            KeyEvent.KEYCODE_BACK -> {
-//                /** 回退键 事件处理 优先级:视频播放全屏-网页回退-关闭页面  */
-//                if (customView != null) {
-//                    hideCustomView()
-//                } else if (webView.canGoBack()) {
-//                    webView.goBack()
-//                } else {
-//
-//                }
-//                return true
-//            }
-//            else -> return  false
-//        }
-//    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
@@ -220,16 +207,6 @@ class VideoWebFragment : Fragment() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    internal inner class InJavaScriptLocalObj {
-//        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-//        @JavascriptInterface
-//        fun setTitle(title: String) {
-//            mActivity.runOnUiThread {
-//                toolbar.title = title
-//            }
-//        }
     }
 
 }

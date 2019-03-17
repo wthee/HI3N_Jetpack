@@ -19,16 +19,11 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import cn.wthee.hi3njetpack.databinding.ActivityMainBinding
-import cn.wthee.hi3njetpack.view.NewsFragmentDirections
 import cn.wthee.hi3njetpack.view.VideoFragmentDirections
 import com.anbaoyue.manyiwang.utils.CleanUtil
 import java.util.ArrayList
-import android.app.Activity
-import android.graphics.PixelFormat
 import cn.wthee.hi3njetpack.util.ActivityUtil
-import java.lang.ref.WeakReference
 import android.os.StrictMode
-import android.util.Log
 import android.view.View
 import com.google.android.material.navigation.NavigationView
 
@@ -44,13 +39,21 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        ActivityUtil.instance.currentActivity = this
+
         //file-->Uri分享
         val builder = StrictMode.VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
         builder.detectFileUriExposure()
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        ActivityUtil.instance.currentActivity = this
+
         getAuthority()
+
+
+
+    }
+
+    private fun start(){
         drawerLayout = binding.drawerLayout
         navigationMenu = binding.navigationView
         navController = Navigation.findNavController(this, R.id.nav_graph)
@@ -60,8 +63,12 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-
         // Set up navigation menu
+        setNav()
+    }
+
+
+    private fun setNav() {
         navigationMenu.setupWithNavController(navController)
         navigationMenu.menu.findItem(R.id.cleanCaches).title = "清理缓存    " + CleanUtil.getTotalCacheSize(this)
         var appInfo = navigationMenu.getHeaderView(0).findViewById<TextView>(R.id.appInfo)
@@ -102,7 +109,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-
     }
 
     private fun getAuthority() {
@@ -119,6 +125,8 @@ class MainActivity : AppCompatActivity() {
         }
         if (mPermissions.size > 0) {
             ActivityCompat.requestPermissions(this, permissions, 1)
+        }else{
+            start()
         }
     }
 
@@ -134,12 +142,10 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 if (!hasPermissionDismiss) {
-
+                    start()
                 } else {
-                    Toast.makeText(this, "拒绝权限将无法使用程序", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "拒绝权限将无法正常使用程序", Toast.LENGTH_SHORT).show()
                 }
-            }
-            else -> {
             }
         }
     }

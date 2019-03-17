@@ -10,4 +10,13 @@ class Video(val url: String,
             val danmuNum: String,
             val length: String
 
-)
+){
+    override fun equals(other: Any?): Boolean {
+        if(other !is Video){
+            return false
+        }
+        var p=other
+        return this.title == p.title
+    }
+
+}

@@ -28,7 +28,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 
-object ImgUtil {
+object PreviewPicUtil {
 
     //查看图片
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -46,7 +46,7 @@ object ImgUtil {
                     dialog.show()
                 }
                 1 -> {
-                    ImgUtil.save(context,url,object : GetUri{
+                    PreviewPicUtil.save(context,url,object : GetUri{
                         override fun imgUri(file: File) {
                             Looper.prepare()
                             Toast.makeText(context,"图片已保存",Toast.LENGTH_SHORT).show()
@@ -55,7 +55,7 @@ object ImgUtil {
                     })
                 }
                 2 ->{
-                    ImgUtil.save(context,url,object : GetUri{
+                    PreviewPicUtil.save(context,url,object : GetUri{
                         override fun imgUri(file: File) {
                             val shareIntent = ShareCompat.IntentBuilder.from(ActivityUtil.instance.currentActivity)
                                 .setStream(Uri.fromFile(file))
@@ -71,6 +71,7 @@ object ImgUtil {
                                         addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
                                     }
                                 }
+
                             context.startActivity(shareIntent)
                             Looper.prepare()
                             Handler().postDelayed({
@@ -136,7 +137,7 @@ object ImgUtil {
         }
         pv.setOnLongClickListener {
             var bmp = pv.drawable as BitmapDrawable
-            ImgUtil.save(context,url,object : GetUri{
+            PreviewPicUtil.save(context,url,object : GetUri{
                 override fun imgUri(file: File) {
                     Looper.prepare()
                     Toast.makeText(context,"图片已保存",Toast.LENGTH_SHORT).show()
@@ -147,5 +148,6 @@ object ImgUtil {
         }
         return pv
     }
+
 
 }

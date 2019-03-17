@@ -1,6 +1,5 @@
 package cn.wthee.hi3njetpack.util
 
-import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 
 object RecyclerViewUtil {
@@ -8,6 +7,6 @@ object RecyclerViewUtil {
         val screenHeight = recyclerView.computeVerticalScrollExtent()
         val scrollHeight = recyclerView.computeVerticalScrollOffset()
         val recyclerViewHeight = recyclerView.computeVerticalScrollRange()
-        return screenHeight + scrollHeight >= recyclerViewHeight
+        return screenHeight + scrollHeight >= recyclerViewHeight * 0.8
     }
 }
