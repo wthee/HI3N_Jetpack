@@ -23,6 +23,7 @@ import cn.wthee.hi3njetpack.viewmodels.VideoViewModel
 import android.view.animation.LayoutAnimationController
 import android.view.animation.ScaleAnimation
 import android.view.animation.TranslateAnimation
+import com.google.android.material.tabs.TabLayout
 
 
 class VideoFragment : Fragment() {
@@ -40,6 +41,8 @@ class VideoFragment : Fragment() {
     private lateinit var swipe: SwipeRefreshLayout
     private lateinit var top: ImageView
     private lateinit var filter: LinearLayout
+    private lateinit var tabOrder: TabLayout
+    private lateinit var tabDura: TabLayout
     private lateinit var binding: FragmentVideoBinding
 
 
@@ -47,7 +50,7 @@ class VideoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        //setHasOptionsMenu(true)
+        setHasOptionsMenu(true)
         binding = FragmentVideoBinding.inflate(inflater,container,false)
         val factory = InjectorUtil.getVideoViewModelFactory(binding.myWeb, urlDefault+
                     "&order=${order[2]}" +
@@ -55,15 +58,31 @@ class VideoFragment : Fragment() {
                     "&tids_1=0" +
                     "&page=")
         viewModel = ViewModelProviders.of(this,factory).get(VideoViewModel::class.java)
-        recyclerView = binding.videoList
-        swipe = binding.videoSwipe
-        top = binding.videoGoTop
-        filter = binding.filterLayout as LinearLayout
+        bindView()
+        setTab()
         val adapter = VideoAdapter()
         binding.videoList.adapter = adapter
         subscribeUi(adapter)
         addListener()
         return binding.root
+    }
+
+    private fun bindView(){
+        recyclerView = binding.videoList
+        swipe = binding.videoSwipe
+        top = binding.videoGoTop
+        filter = binding.filterLayout
+        tabOrder = binding.tabO
+        tabDura  =binding.tabD
+    }
+
+    private fun setTab(){
+        orderText.forEach {
+            tabOrder.addTab(tabOrder.newTab().setText(it))
+        }
+        durationText.forEach {
+            tabDura.addTab(tabDura.newTab().setText(it))
+        }
     }
 
     private fun subscribeUi(adapter: VideoAdapter) {
@@ -132,6 +151,7 @@ class VideoFragment : Fragment() {
         val controller = LayoutAnimationController(translateAnimation, 0f)
         filter.layoutAnimation = controller
     }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.menu_video, menu)
