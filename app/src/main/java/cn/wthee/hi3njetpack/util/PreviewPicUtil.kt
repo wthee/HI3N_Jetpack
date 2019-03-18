@@ -30,9 +30,12 @@ import java.io.IOException
 
 object PreviewPicUtil {
 
+    var storePath = Environment.getExternalStorageDirectory ().absolutePath + File.separator + "img"
+    var sharePath = Environment.getExternalStorageDirectory ().absolutePath + File.separator + "share"
+    var file = File(sharePath)
     //查看图片
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    fun check(context: Context, url: String){
+    fun preview(context: Context, url: String){
         val list = arrayOf("查看原图","保存图片","分享图片")
         var alertDialog = AlertDialog.Builder(context)
         var dialog = alertDialog.setItems(list) { _, i ->
@@ -46,7 +49,7 @@ object PreviewPicUtil {
                     dialog.show()
                 }
                 1 -> {
-                    PreviewPicUtil.save(context,url,object : GetUri{
+                    PreviewPicUtil.save(context,url, storePath, true, object : GetUri{
                         override fun imgUri(file: File) {
                             Looper.prepare()
                             Toast.makeText(context,"图片已保存",Toast.LENGTH_SHORT).show()
@@ -55,7 +58,7 @@ object PreviewPicUtil {
                     })
                 }
                 2 ->{
-                    PreviewPicUtil.save(context,url,object : GetUri{
+                    PreviewPicUtil.save(context,url, sharePath,false, object : GetUri{
                         override fun imgUri(file: File) {
                             val shareIntent = ShareCompat.IntentBuilder.from(ActivityUtil.instance.currentActivity)
                                 .setStream(Uri.fromFile(file))
@@ -73,11 +76,6 @@ object PreviewPicUtil {
                                 }
 
                             context.startActivity(shareIntent)
-                            Looper.prepare()
-                            Handler().postDelayed({
-                                file.delete()
-                            },30000.toLong())
-                            Looper.loop()
                         }
                     })
                 }
@@ -87,7 +85,7 @@ object PreviewPicUtil {
     }
 
     //保存图片
-    private fun save(context: Context,url: String, getUri: GetUri){
+    private fun save(context: Context,url: String, savePath: String, isRefresh: Boolean, getUri: GetUri){
 
         var okHttpClient = OkHttpClient()
         var request = Request.Builder()
@@ -100,8 +98,7 @@ object PreviewPicUtil {
                 return
             }
             override fun onResponse(call: Call, response: Response) {
-                var storePath = Environment.getExternalStorageDirectory ().absolutePath + File.separator + "img"
-                var appDir =  File(storePath)
+                var appDir =  File(savePath)
                 if (!appDir.exists()) {
                     appDir.mkdir()
                 }
@@ -114,15 +111,28 @@ object PreviewPicUtil {
                 bitmap.compress(Bitmap.CompressFormat.PNG,100,out)
                 out.flush()
                 out.close()
-                var uri = Uri.fromFile (file);
-                context.sendBroadcast( Intent (Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri))
+                if(isRefresh){
+                    var uri = Uri.fromFile (file)
+                    context.sendBroadcast( Intent (Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri))
+                }
                 getUri.imgUri(file)
             }
         })
     }
-
     interface GetUri{
         fun imgUri(file: File)
+    }
+    //分享后删除
+    fun deleteFile(file: File){
+        if (file.isDirectory) {
+            var files = file.listFiles()
+            files.forEach {
+                deleteFile(it)
+            }
+            file.delete();//如要保留文件夹，只删除文件，请注释这行
+        } else if (file.exists()) {
+            file.delete();
+        }
     }
 
     //动态的ImageView
@@ -137,7 +147,7 @@ object PreviewPicUtil {
         }
         pv.setOnLongClickListener {
             var bmp = pv.drawable as BitmapDrawable
-            PreviewPicUtil.save(context,url,object : GetUri{
+            PreviewPicUtil.save(context,url, storePath,true,object : GetUri{
                 override fun imgUri(file: File) {
                     Looper.prepare()
                     Toast.makeText(context,"图片已保存",Toast.LENGTH_SHORT).show()

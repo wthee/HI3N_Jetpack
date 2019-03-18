@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import cn.wthee.hi3njetpack.MyApplication
 
-object NetWorkUtil {
+object NewWebViewUtil {
 
     fun createWebView(): WebView {
         var web = WebView(MyApplication.context)

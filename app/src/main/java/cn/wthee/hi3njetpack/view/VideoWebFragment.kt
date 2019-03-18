@@ -99,7 +99,7 @@ class VideoWebFragment : Fragment() {
             if (hitTestResult.type == WebView.HitTestResult.IMAGE_TYPE ||
                 hitTestResult.type == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE
             ) {
-                PreviewPicUtil.check(binding.root.context, hitTestResult.extra)
+                PreviewPicUtil.preview(binding.root.context, hitTestResult.extra)
                 return@setOnLongClickListener true
             }
             return@setOnLongClickListener false;

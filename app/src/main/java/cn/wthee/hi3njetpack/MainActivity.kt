@@ -25,11 +25,10 @@ import java.util.ArrayList
 import cn.wthee.hi3njetpack.util.ActivityUtil
 import android.os.StrictMode
 import android.view.View
+import cn.wthee.hi3njetpack.util.PreviewPicUtil
 import com.google.android.material.navigation.NavigationView
 
-
 class MainActivity : AppCompatActivity() {
-
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationMenu: NavigationView
@@ -39,6 +38,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        PreviewPicUtil.deleteFile(PreviewPicUtil.file)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         ActivityUtil.instance.currentActivity = this
 
@@ -48,8 +48,6 @@ class MainActivity : AppCompatActivity() {
         builder.detectFileUriExposure()
 
         getAuthority()
-
-
 
     }
 
@@ -161,5 +159,4 @@ class MainActivity : AppCompatActivity() {
             super.onBackPressed()
         }
     }
-
 }

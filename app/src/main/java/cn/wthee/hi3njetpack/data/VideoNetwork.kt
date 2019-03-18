@@ -1,8 +1,5 @@
 package cn.wthee.hi3njetpack.data
 
-
-import android.os.Handler
-import android.util.Log
 import android.view.View
 import android.webkit.*
 import androidx.lifecycle.LiveData
@@ -41,8 +38,6 @@ class VideoNetwork {
     private var isGone: MutableLiveData<Int> = MutableLiveData()
     private var isRefresh: MutableLiveData<Boolean> = MutableLiveData()
 
-    private val url =
-        "https://search.bilibili.com/all?keyword=%E5%B4%A9%E5%9D%8F3&from_source=banner_search&spm_id_from=333.334.b_62616e6e65725f6c696e6b.1&order=pubdate&duration=0&tids_1=0&page="
 
     fun isGone(): LiveData<Int> {
         return isGone
@@ -52,38 +47,39 @@ class VideoNetwork {
         return isRefresh
     }
 
-    private fun load(webView: WebView) {
+    private fun load(webView: WebView,url: String) {
         webView.loadUrl(url + page)
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
-                webView.loadUrl("javascript:window.local_obj.loadMore(document.getElementsByTagName('ul')[" + 10 + "].innerHTML+document.getElementsByTagName('ul')[" + 9 + "].innerHTML);")
+                webView.loadUrl("javascript:window.local_obj.loadMore(document.getElementsByClassName('video-contain')[0].innerHTML);")
             }
         }
     }
 
-    fun initVideo(webView: WebView): MutableLiveData<List<Video>> {
+    fun initVideo(webView: WebView,url: String): MutableLiveData<List<Video>> {
+        isGone.postValue(View.VISIBLE)
         webView.settings.javaScriptEnabled = true
         webView.settings.useWideViewPort = true
         webView.settings.domStorageEnabled = true
         webView.settings.loadWithOverviewMode = true
         webView.settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN
         webView.addJavascriptInterface(InJavaScriptLocalObj(), "local_obj")
-        load(webView)
+        load(webView,url)
         return newData
     }
 
-    fun loadNext(webView: WebView): MutableLiveData<List<Video>> {
+    fun loadNext(webView: WebView,url: String): MutableLiveData<List<Video>> {
         isGone.postValue(View.VISIBLE)
         page++
-        load(webView)
+        load(webView,url)
         return newData
     }
 
-    fun refresh(webView: WebView): MutableLiveData<List<Video>> {
+    fun refresh(webView: WebView,url: String): MutableLiveData<List<Video>> {
         page = 1
         videoList.clear()
         isRefresh.postValue(true)
-        load(webView)
+        load(webView,url)
         return newData
     }
 

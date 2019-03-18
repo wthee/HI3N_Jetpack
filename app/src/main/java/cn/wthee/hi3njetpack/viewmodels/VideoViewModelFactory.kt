@@ -7,9 +7,10 @@ import cn.wthee.hi3njetpack.data.VideoRepository
 
 class VideoViewModelFactory(
     private val webView: WebView,
+    private val url: String,
     private val repository: VideoRepository
 ) : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>) = VideoViewModel(webView,repository) as T
+    override fun <T : ViewModel> create(modelClass: Class<T>) = VideoViewModel(webView,url,repository) as T
 }

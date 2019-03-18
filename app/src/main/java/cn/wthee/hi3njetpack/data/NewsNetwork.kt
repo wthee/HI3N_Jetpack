@@ -6,7 +6,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import cn.wthee.hi3njetpack.util.NetWorkUtil
+import cn.wthee.hi3njetpack.util.NewWebViewUtil
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.ArrayList
@@ -32,7 +32,7 @@ class NewsNetwork{
 
     private var newData: MutableLiveData<List<News>> = MutableLiveData()
     private var newsList : ArrayList<News> = arrayListOf()
-    private var webView = NetWorkUtil.createWebView()
+    private var webView = NewWebViewUtil.createWebView()
 
     private var isGone: MutableLiveData<Int> = MutableLiveData()
     private var isRefresh: MutableLiveData<Boolean> = MutableLiveData()
@@ -45,13 +45,13 @@ class NewsNetwork{
         return isRefresh
     }
     fun getNews(): MutableLiveData<List<News>>{
+        isGone.postValue(View.VISIBLE)
         webView.settings.javaScriptEnabled = true
         webView.addJavascriptInterface(InJavaScriptLocalObj(), "local_obj")
         webView.loadUrl("https://www.bh3.com/index.php/news/")
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 webView.loadUrl("javascript:window.local_obj.loadMore(document.getElementsByTagName('ul')[2].innerHTML);")
-
                 super.onPageFinished(view, url)
             }
         }

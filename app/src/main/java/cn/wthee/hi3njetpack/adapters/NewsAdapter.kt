@@ -52,7 +52,7 @@ class NewsAdapter : ListAdapter<News, NewsAdapter.ViewHolder>(NewsDiffCallback()
 
     private fun createOnLongClickListener(link: String): View.OnLongClickListener {
         return View.OnLongClickListener {
-            PreviewPicUtil.check(it.context, link)
+            PreviewPicUtil.preview(it.context, link)
             return@OnLongClickListener true
         }
     }

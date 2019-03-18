@@ -53,7 +53,7 @@ class VideoAdapter : ListAdapter<Video, VideoAdapter.ViewHolder>(VideoDiffCallba
 
     private fun createOnLongClickListener(imgurl: String): View.OnLongClickListener {
         return View.OnLongClickListener {
-            PreviewPicUtil.check(it.context, imgurl)
+            PreviewPicUtil.preview(it.context, imgurl)
             return@OnLongClickListener true
         }
     }

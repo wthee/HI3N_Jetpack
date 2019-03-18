@@ -2,10 +2,11 @@ package cn.wthee.hi3njetpack.view
 
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.os.Handler
+import android.view.*
+import android.view.animation.AlphaAnimation
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -19,14 +20,26 @@ import cn.wthee.hi3njetpack.databinding.FragmentVideoBinding
 import cn.wthee.hi3njetpack.util.InjectorUtil
 import cn.wthee.hi3njetpack.util.RecyclerViewUtil
 import cn.wthee.hi3njetpack.viewmodels.VideoViewModel
+import android.view.animation.LayoutAnimationController
+import android.view.animation.ScaleAnimation
+import android.view.animation.TranslateAnimation
 
 
 class VideoFragment : Fragment() {
+
+    private val urlDefault ="https://search.bilibili.com/all?keyword=%E5%B4%A9%E5%9D%8F3"
+    private val order = arrayListOf("totalrank","click","pubdate","dm","stow")
+    private val orderText = arrayListOf("综合排序","最多点击","最新发布","最多弹幕","最多收藏")
+    private val orderN = 0
+    private val duration = arrayListOf("0","1","2","3","4")
+    private val durationText = arrayListOf("全部时长","10分钟以下","10-30分钟","30-60分钟","60分钟以上")
+    private val durationN = 0
 
     private lateinit var viewModel: VideoViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var swipe: SwipeRefreshLayout
     private lateinit var top: ImageView
+    private lateinit var filter: LinearLayout
     private lateinit var binding: FragmentVideoBinding
 
 
@@ -34,12 +47,18 @@ class VideoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        //setHasOptionsMenu(true)
         binding = FragmentVideoBinding.inflate(inflater,container,false)
-        val factory = InjectorUtil.getVideoViewModelFactory(binding.myWeb)
+        val factory = InjectorUtil.getVideoViewModelFactory(binding.myWeb, urlDefault+
+                    "&order=${order[2]}" +
+                    "&duration=${duration[durationN]}" +
+                    "&tids_1=0" +
+                    "&page=")
         viewModel = ViewModelProviders.of(this,factory).get(VideoViewModel::class.java)
         recyclerView = binding.videoList
         swipe = binding.videoSwipe
         top = binding.videoGoTop
+        filter = binding.filterLayout as LinearLayout
         val adapter = VideoAdapter()
         binding.videoList.adapter = adapter
         subscribeUi(adapter)
@@ -77,6 +96,7 @@ class VideoFragment : Fragment() {
                 if (isSignificantDelta) {
                     if (dy > 0) {
                         top.visibility = View.GONE
+                        filter.visibility = View.GONE
                     } else {
                         top.visibility = View.VISIBLE
                     }
@@ -84,6 +104,12 @@ class VideoFragment : Fragment() {
                 if (!recyclerView.canScrollVertically(-1)) {
                     top.visibility = View.GONE
                 }
+            }
+        })
+
+        recyclerView.setOnTouchListener(object : View.OnTouchListener{
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                return swipe.isRefreshing
             }
         })
 
@@ -96,4 +122,35 @@ class VideoFragment : Fragment() {
         }
     }
 
+    private fun setAnim(isVisible: Boolean){
+        val translateAnimation:TranslateAnimation =
+            if(isVisible)
+                TranslateAnimation(0f,0f,0f, -100f)
+            else
+                TranslateAnimation(0f,0f, -100f,0f)
+        translateAnimation.duration = 800
+        val controller = LayoutAnimationController(translateAnimation, 0f)
+        filter.layoutAnimation = controller
+    }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.menu_video, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.filter -> {
+                filter.visibility = if(filter.visibility==View.GONE) {
+                    setAnim(false)
+                    View.VISIBLE
+                } else {
+                    setAnim(true)
+                    View.GONE
+                }
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 }

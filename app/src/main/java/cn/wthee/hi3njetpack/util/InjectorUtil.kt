@@ -10,9 +10,9 @@ import cn.wthee.hi3njetpack.viewmodels.VideoViewModelFactory
 
 object InjectorUtil {
 
-    fun getNewsRepository() = NewsRepository.getInstance(NewsNetwork.getInstance())
+    private fun getNewsRepository() = NewsRepository.getInstance(NewsNetwork.getInstance())
     fun getNewsViewModelFactory() = NewsViewModelFactory(getNewsRepository())
 
-    fun getVideoRepository() = VideoRepository.getInstance(VideoNetwork.getInstance())
-    fun getVideoViewModelFactory(webView: WebView) = VideoViewModelFactory(webView,getVideoRepository())
+    private fun getVideoRepository() = VideoRepository.getInstance(VideoNetwork.getInstance())
+    fun getVideoViewModelFactory(webView: WebView, url: String) = VideoViewModelFactory(webView,url,getVideoRepository())
 }

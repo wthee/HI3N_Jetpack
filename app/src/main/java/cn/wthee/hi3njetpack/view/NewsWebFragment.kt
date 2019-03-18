@@ -48,14 +48,14 @@ class NewsWebFragment : Fragment() {
             var hitTestResult = webView.hitTestResult
             if (hitTestResult.type == WebView.HitTestResult.IMAGE_TYPE ||
                 hitTestResult.type == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
-                PreviewPicUtil.check(binding.root.context,hitTestResult.extra)
+                PreviewPicUtil.preview(binding.root.context,hitTestResult.extra)
                 return@setOnLongClickListener true
             }
             return@setOnLongClickListener false;
         }
 
         web_pv.setOnLongClickListener{
-            PreviewPicUtil.check(binding.root.context,imgurl)
+            PreviewPicUtil.preview(binding.root.context,imgurl)
             return@setOnLongClickListener true
         }
         return binding.root
