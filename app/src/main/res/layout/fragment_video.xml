@@ -29,14 +29,14 @@
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabO"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@color/colorPrimary" />
+                    android:layout_height="@dimen/tabHeight"
+                    android:background="@color/white" />
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabD"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@color/colorPrimary"/>
+                    android:layout_height="@dimen/tabHeight"
+                    android:background="@color/white"/>
 
             </LinearLayout>
 
@@ -56,9 +56,6 @@
 
         </LinearLayout>
 
-
-
-
         <ImageView
             android:id="@+id/video_goTop"
             android:layout_width="@dimen/topSize"
@@ -69,7 +66,5 @@
             android:background="@drawable/br_up" />
 
     </FrameLayout>
-
-
 
 </layout>

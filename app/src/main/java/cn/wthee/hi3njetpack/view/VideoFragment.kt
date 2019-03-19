@@ -75,11 +75,7 @@ class VideoFragment : Fragment() {
         filter = binding.filterLayout
         tabOrder = binding.tabO
         tabDura  =binding.tabD
-        factory = InjectorUtil.getVideoViewModelFactory(binding.myWeb, urlDefault+
-                "&order=${order[0]}" +
-                "&duration=${duration[0]}" +
-                "&tids_1=0" +
-                "&page=")
+        factory = InjectorUtil.getVideoViewModelFactory(binding.myWeb, mUrl)
     }
 
     private fun setTab(){
