@@ -14,12 +14,12 @@ class VideoViewModel (
 
     var video : MutableLiveData<List<Video>> = repository.initVideo(webView,url)
 
-    fun loadMore() {
-        this.video = repository.loadNext(webView,url)
+    fun loadMore(url: String) {
+        this.video = repository.loadNext(url)
     }
 
-    fun refresh(){
-        this.video = repository.refresh(webView,url)
+    fun refresh(url: String){
+        this.video = repository.refresh(url)
     }
 
     var isGone: LiveData<Int> = repository.isGone()

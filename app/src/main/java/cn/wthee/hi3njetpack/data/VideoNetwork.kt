@@ -29,6 +29,8 @@ class VideoNetwork {
     private val pattern6 = Pattern.compile(watchNumRegex, Pattern.CASE_INSENSITIVE)
     private val pattern7 = Pattern.compile(lengthRegex, Pattern.CASE_INSENSITIVE)
 
+    private lateinit var webView: WebView
+
     private var num = 0
     private var page: Int = 1
 
@@ -47,7 +49,7 @@ class VideoNetwork {
         return isRefresh
     }
 
-    private fun load(webView: WebView,url: String) {
+    private fun load(url: String) {
         webView.loadUrl(url + page)
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
@@ -56,30 +58,31 @@ class VideoNetwork {
         }
     }
 
-    fun initVideo(webView: WebView,url: String): MutableLiveData<List<Video>> {
+    fun initVideo(mwebView: WebView,url: String): MutableLiveData<List<Video>> {
         isGone.postValue(View.VISIBLE)
+        webView = mwebView
         webView.settings.javaScriptEnabled = true
         webView.settings.useWideViewPort = true
         webView.settings.domStorageEnabled = true
         webView.settings.loadWithOverviewMode = true
         webView.settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN
         webView.addJavascriptInterface(InJavaScriptLocalObj(), "local_obj")
-        load(webView,url)
+        load(url)
         return newData
     }
 
-    fun loadNext(webView: WebView,url: String): MutableLiveData<List<Video>> {
+    fun loadNext(url: String): MutableLiveData<List<Video>> {
         isGone.postValue(View.VISIBLE)
         page++
-        load(webView,url)
+        load(url)
         return newData
     }
 
-    fun refresh(webView: WebView,url: String): MutableLiveData<List<Video>> {
+    fun refresh(url: String): MutableLiveData<List<Video>> {
         page = 1
         videoList.clear()
         isRefresh.postValue(true)
-        load(webView,url)
+        load(url)
         return newData
     }
 

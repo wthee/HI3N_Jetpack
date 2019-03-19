@@ -6,8 +6,8 @@ class VideoRepository private constructor(private val videoNetwork: VideoNetwork
 
     fun initVideo(webView: WebView,url: String) = videoNetwork.initVideo(webView,url)
 
-    fun loadNext(webView: WebView,url: String) = videoNetwork.loadNext(webView,url)
-    fun refresh(webView: WebView,url: String) = videoNetwork.refresh(webView,url)
+    fun loadNext(url: String) = videoNetwork.loadNext(url)
+    fun refresh(url: String) = videoNetwork.refresh(url)
     fun isGone() = videoNetwork.isGone()
     fun isRefresh() = videoNetwork.isRefresh()
 

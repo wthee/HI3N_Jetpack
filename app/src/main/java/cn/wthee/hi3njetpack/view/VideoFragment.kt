@@ -21,20 +21,25 @@ import cn.wthee.hi3njetpack.util.InjectorUtil
 import cn.wthee.hi3njetpack.util.RecyclerViewUtil
 import cn.wthee.hi3njetpack.viewmodels.VideoViewModel
 import android.view.animation.LayoutAnimationController
-import android.view.animation.ScaleAnimation
 import android.view.animation.TranslateAnimation
+import cn.wthee.hi3njetpack.viewmodels.VideoViewModelFactory
 import com.google.android.material.tabs.TabLayout
 
 
 class VideoFragment : Fragment() {
 
     private val urlDefault ="https://search.bilibili.com/all?keyword=%E5%B4%A9%E5%9D%8F3"
+    private var mUrl: String = urlDefault+
+            "&order=totalrank" +
+            "&duration=0" +
+            "&tids_1=0" +
+            "&page="
     private val order = arrayListOf("totalrank","click","pubdate","dm","stow")
     private val orderText = arrayListOf("综合排序","最多点击","最新发布","最多弹幕","最多收藏")
-    private val orderN = 0
+    private var orderN = 0
     private val duration = arrayListOf("0","1","2","3","4")
     private val durationText = arrayListOf("全部时长","10分钟以下","10-30分钟","30-60分钟","60分钟以上")
-    private val durationN = 0
+    private var durationN = 0
 
     private lateinit var viewModel: VideoViewModel
     private lateinit var recyclerView: RecyclerView
@@ -44,6 +49,7 @@ class VideoFragment : Fragment() {
     private lateinit var tabOrder: TabLayout
     private lateinit var tabDura: TabLayout
     private lateinit var binding: FragmentVideoBinding
+    private lateinit var factory: VideoViewModelFactory
 
 
     override fun onCreateView(
@@ -52,13 +58,8 @@ class VideoFragment : Fragment() {
     ): View? {
         setHasOptionsMenu(true)
         binding = FragmentVideoBinding.inflate(inflater,container,false)
-        val factory = InjectorUtil.getVideoViewModelFactory(binding.myWeb, urlDefault+
-                    "&order=${order[2]}" +
-                    "&duration=${duration[durationN]}" +
-                    "&tids_1=0" +
-                    "&page=")
-        viewModel = ViewModelProviders.of(this,factory).get(VideoViewModel::class.java)
         bindView()
+        viewModel = ViewModelProviders.of(this,factory).get(VideoViewModel::class.java)
         setTab()
         val adapter = VideoAdapter()
         binding.videoList.adapter = adapter
@@ -74,6 +75,11 @@ class VideoFragment : Fragment() {
         filter = binding.filterLayout
         tabOrder = binding.tabO
         tabDura  =binding.tabD
+        factory = InjectorUtil.getVideoViewModelFactory(binding.myWeb, urlDefault+
+                "&order=${order[0]}" +
+                "&duration=${duration[0]}" +
+                "&tids_1=0" +
+                "&page=")
     }
 
     private fun setTab(){
@@ -83,6 +89,9 @@ class VideoFragment : Fragment() {
         durationText.forEach {
             tabDura.addTab(tabDura.newTab().setText(it))
         }
+        tabOrder.getTabAt(orderN)!!.select()
+        tabDura.getTabAt(durationN)!!.select()
+
     }
 
     private fun subscribeUi(adapter: VideoAdapter) {
@@ -105,7 +114,7 @@ class VideoFragment : Fragment() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && RecyclerViewUtil.isBottom(recyclerView)) {
-                    viewModel.loadMore()
+                    viewModel.loadMore(mUrl)
                 }
             }
             var mScrollThreshold: Int = 0
@@ -115,7 +124,6 @@ class VideoFragment : Fragment() {
                 if (isSignificantDelta) {
                     if (dy > 0) {
                         top.visibility = View.GONE
-                        filter.visibility = View.GONE
                     } else {
                         top.visibility = View.VISIBLE
                     }
@@ -133,12 +141,52 @@ class VideoFragment : Fragment() {
         })
 
         swipe.setOnRefreshListener {
-            viewModel.refresh()
+            viewModel.refresh(mUrl)
         }
 
         top.setOnClickListener {
             recyclerView.scrollToPosition(0)
         }
+
+        tabOrder.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+            override fun onTabReselected(p0: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabUnselected(p0: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabSelected(p0: TabLayout.Tab?) {
+                orderN = p0!!.position
+                mUrl = urlDefault+
+                        "&order=${order[orderN]}" +
+                        "&duration=${duration[durationN]}" +
+                        "&tids_1=0" +
+                        "&page="
+                viewModel.refresh(mUrl)
+            }
+        })
+
+        tabDura.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+            override fun onTabReselected(p0: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabUnselected(p0: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabSelected(p0: TabLayout.Tab?) {
+                durationN = p0!!.position
+                mUrl = urlDefault+
+                        "&order=${order[orderN]}" +
+                        "&duration=${duration[durationN]}" +
+                        "&tids_1=0" +
+                        "&page="
+                viewModel.refresh(mUrl)
+            }
+        })
     }
 
     private fun setAnim(isVisible: Boolean){
@@ -147,7 +195,7 @@ class VideoFragment : Fragment() {
                 TranslateAnimation(0f,0f,0f, -100f)
             else
                 TranslateAnimation(0f,0f, -100f,0f)
-        translateAnimation.duration = 800
+        translateAnimation.duration = 400
         val controller = LayoutAnimationController(translateAnimation, 0f)
         filter.layoutAnimation = controller
     }
