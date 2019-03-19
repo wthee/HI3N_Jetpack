@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ShareCompat
 import cn.wthee.hi3njetpack.R
 import android.widget.FrameLayout
+import cn.wthee.hi3njetpack.util.ShareUtil
 import im.delight.android.webview.AdvancedWebView
 
 
@@ -183,30 +184,14 @@ class VideoWebFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-
     @Suppress("DEPRECATION")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_share -> {
-                val shareIntent = ShareCompat.IntentBuilder.from(activity)
-                    .setText(mTitle + mLink + "点击查看")
-                    .setType("text/plain")
-                    .createChooserIntent()
-                    .apply {
-                        // https://android-developers.googleblog.com/2012/02/share-with-intents.html
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            // If we're on Lollipop, we can open the intent as a document
-                            addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-                        } else {
-                            // Else, we will use the old CLEAR_WHEN_TASK_RESET flag
-                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
-                        }
-                    }
-                startActivity(shareIntent)
+                ShareUtil.shareText("$mTitle——点击查看$mLink",binding.root.context)
                 return true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
-
 }

@@ -8,7 +8,8 @@ class Video(val url: String,
             val uper: String,
             val watchNum: String,
             val danmuNum: String,
-            val length: String
+            val length: String,
+            val intro: String
 
 ){
     override fun equals(other: Any?): Boolean {

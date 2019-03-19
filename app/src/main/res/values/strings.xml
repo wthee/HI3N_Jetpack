@@ -7,4 +7,5 @@
     <string name="label_web"></string>
     <string name="label_video"></string>
     <string name="menu_news">公告信息</string>
+    <string name="shareME">分享应用</string>
 </resources>

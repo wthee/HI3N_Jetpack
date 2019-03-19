@@ -30,6 +30,7 @@ class VideoNetwork {
     private val pattern7 = Pattern.compile(lengthRegex, Pattern.CASE_INSENSITIVE)
 
     private lateinit var webView: WebView
+    private var intros: ArrayList<String> = arrayListOf()
 
     private var num = 0
     private var page: Int = 1
@@ -53,6 +54,10 @@ class VideoNetwork {
         webView.loadUrl(url + page)
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
+                for(i in 0..19){
+                    webView.loadUrl("javascript:window.local_obj.getIntro(document.getElementsByClassName('des')[$i].innerHTML);")
+                }
+
                 webView.loadUrl("javascript:window.local_obj.loadMore(document.getElementsByClassName('video-contain')[0].innerHTML);")
             }
         }
@@ -88,6 +93,10 @@ class VideoNetwork {
 
 
     internal inner class InJavaScriptLocalObj {
+        @JavascriptInterface
+        fun getIntro(html: String){
+            intros.add(html)
+        }
         @JavascriptInterface
         fun loadMore(html: String) {
             val br = BufferedReader(InputStreamReader(html.byteInputStream()))
@@ -167,7 +176,8 @@ class VideoNetwork {
                     upers[num] + "·",
                     watchNums[num] + "次播放·",
                     danmuNums[num] + "弹幕",
-                    lengths[num]
+                    lengths[num],
+                    intros[num]
                 )
                 if (!videoList.contains(video)) {
                     videoList.add(video)

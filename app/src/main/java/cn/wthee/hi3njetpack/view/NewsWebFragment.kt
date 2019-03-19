@@ -1,6 +1,5 @@
 package cn.wthee.hi3njetpack.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.*
@@ -13,9 +12,9 @@ import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.ShareCompat
 import cn.wthee.hi3njetpack.MyApplication
 import cn.wthee.hi3njetpack.R
+import cn.wthee.hi3njetpack.util.ShareUtil
 import com.bumptech.glide.Glide
 
 
@@ -25,8 +24,9 @@ class NewsWebFragment : Fragment() {
     private lateinit var binding:FragmentWebNewsBinding
     private lateinit var mActivity: AppCompatActivity
     private lateinit var toolbar: Toolbar
-    private lateinit var web_pv: ImageView
+    private lateinit var webpv: ImageView
     private lateinit var mLink: String
+    private lateinit var mTitle: String
     private lateinit var imgurl: String
 
     override fun onCreateView(
@@ -34,12 +34,13 @@ class NewsWebFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         mLink = NewsWebFragmentArgs.fromBundle(arguments!!).link
+        mTitle = NewsWebFragmentArgs.fromBundle(arguments!!).title
         setHasOptionsMenu(true)
         mActivity =  (activity as AppCompatActivity)
 
         binding = FragmentWebNewsBinding.inflate(inflater,container,false)
         webView = binding.webView
-        web_pv = binding.webPv
+        webpv = binding.webPv
         toolbar = mActivity.findViewById(R.id.toolbar)
         showWeb(webView,mLink)
 
@@ -54,7 +55,7 @@ class NewsWebFragment : Fragment() {
             return@setOnLongClickListener false;
         }
 
-        web_pv.setOnLongClickListener{
+        webpv.setOnLongClickListener{
             PreviewPicUtil.preview(binding.root.context,imgurl)
             return@setOnLongClickListener true
         }
@@ -107,21 +108,7 @@ class NewsWebFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_share -> {
-                val shareIntent = ShareCompat.IntentBuilder.from(activity)
-                    .setText("点击查看"+mLink)
-                    .setType("text/plain")
-                    .createChooserIntent()
-                    .apply {
-                        // https://android-developers.googleblog.com/2012/02/share-with-intents.html
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            // If we're on Lollipop, we can open the intent as a document
-                            addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-                        } else {
-                            // Else, we will use the old CLEAR_WHEN_TASK_RESET flag
-                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
-                        }
-                    }
-                startActivity(shareIntent)
+                ShareUtil.shareText("$mTitle——点击查看$mLink",binding.root.context)
                 return true
             }
             else -> super.onOptionsItemSelected(item)
@@ -142,7 +129,7 @@ class NewsWebFragment : Fragment() {
                 imgurl = img
                 Glide.with(MyApplication.context)
                     .load(img)
-                    .into(web_pv)
+                    .into(webpv)
             }
 
         }

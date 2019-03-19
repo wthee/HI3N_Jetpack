@@ -38,14 +38,14 @@ class NewsAdapter : ListAdapter<News, NewsAdapter.ViewHolder>(NewsDiffCallback()
         params.height = (188 * scale).toInt()
         holder.newsImage.layoutParams = params
         holder.apply {
-            bind(createOnClickListener(news!!.link), createOnLongClickListener(news.imgUrl),news)
+            bind(createOnClickListener(news!!.link,news.title), createOnLongClickListener(news.imgUrl),news)
             itemView.tag = news
         }
     }
 
-    private fun createOnClickListener(link: String): View.OnClickListener {
+    private fun createOnClickListener(link: String, title: String): View.OnClickListener {
         return View.OnClickListener {
-            val direction = NewsFragmentDirections.actionNewsFragmentToWebFragment(link)
+            val direction = NewsFragmentDirections.actionNewsFragmentToWebFragment(link,title)
             it.findNavController().navigate(direction)
         }
     }

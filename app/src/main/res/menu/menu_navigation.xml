@@ -15,4 +15,10 @@
         android:title="@string/clean"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/shareME"
+        android:icon="@android:drawable/ic_menu_share"
+        android:title="@string/shareME"
+        app:showAsAction="always" />
+
 </menu>

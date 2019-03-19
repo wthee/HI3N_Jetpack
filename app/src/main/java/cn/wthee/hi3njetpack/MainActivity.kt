@@ -1,6 +1,8 @@
 package cn.wthee.hi3njetpack
 
 import android.Manifest
+import android.app.Dialog
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -25,8 +27,12 @@ import java.util.ArrayList
 import cn.wthee.hi3njetpack.util.ActivityUtil
 import android.os.StrictMode
 import android.view.View
+import android.widget.LinearLayout
+import androidx.appcompat.app.AlertDialog
 import cn.wthee.hi3njetpack.util.PreviewPicUtil
+import cn.wthee.hi3njetpack.util.ShareUtil
 import com.google.android.material.navigation.NavigationView
+import com.nineoldandroids.view.ViewHelper
 
 class MainActivity : AppCompatActivity() {
 
@@ -85,6 +91,16 @@ class MainActivity : AppCompatActivity() {
                     this.findNavController(R.id.nav_graph).navigate(direction)
                     drawerLayout.closeDrawers()
                 }
+                R.id.shareME ->{
+                    var dialog = AlertDialog.Builder(this)
+                    dialog.setTitle("要分享给别的舰长吗？")
+                    dialog.setIcon(R.drawable.logo)
+                    dialog.setPositiveButton("分享(ง •_•)ง") { _, _ ->
+                        ShareUtil.shareText("HI3N:https://www.coolapk.com/game/cn.wthee.hi3nlite\n",this)
+                    }
+                    dialog.setNegativeButton("算了◑﹏◐") { _, _ -> }
+                    dialog.show()
+                }
             }
             return@setNavigationItemSelectedListener true
         }
@@ -94,7 +110,15 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-                return
+                var mContent = drawerLayout.getChildAt(0)
+                var mMenu = drawerView
+                if(drawerView.tag == "LEFT"){
+                    ViewHelper.setAlpha(mMenu,0.6f + 0.4f * slideOffset)
+                    ViewHelper.setTranslationX(mContent,mMenu.measuredWidth * slideOffset)
+                    ViewHelper.setPivotX(mContent,0f)
+                    ViewHelper.setPivotY(mContent,mContent.measuredHeight / 2f)
+                    mContent.invalidate()
+                }
             }
 
             override fun onDrawerClosed(drawerView: View) {

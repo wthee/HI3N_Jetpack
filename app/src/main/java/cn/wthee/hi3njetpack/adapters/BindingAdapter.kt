@@ -13,6 +13,7 @@ fun bindImageFromUrl(view: ImageView, imageUrl: String?) {
         var requestOptions = RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC)
         Glide.with(view.context)
             .load(imageUrl)
+            .transition(DrawableTransitionOptions.withCrossFade(300))
             .apply(requestOptions)
             .into(view)
     }

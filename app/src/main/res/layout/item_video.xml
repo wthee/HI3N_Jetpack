@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
@@ -17,6 +18,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:onClick="@{clickListener}"
         android:onLongClick="@{longClick}">
 
@@ -30,6 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scaleType="fitXY"
+                tools:background="@drawable/logo"
                 app:imageFromUrl="@{video.imgurl}"/>
 
             <TextView
@@ -41,6 +44,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_small"
+                tools:text="@string/app_name"
                 android:text="@{video.length}"/>
         </FrameLayout>
 
@@ -60,12 +64,21 @@
                 android:ellipsize="end"
                 android:textColor="@color/text"
                 android:textSize="@dimen/text"
+                tools:text="@string/app_name"
                 android:text="@{video.title}"/>
+
+            <TextView
+                android:id="@+id/video_intro"
+                android:layout_below="@id/video_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{video.intro}"
+                tools:text="string/app_namestring/app_namestring/app_namestring/app_namestring/app_namestring/app_name"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/video_title"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/video_intro"
                 android:padding="3dp">
 
                 <TextView
@@ -74,6 +87,7 @@
                     android:layout_height="match_parent"
                     android:gravity="bottom|left"
                     android:textSize="@dimen/text_small"
+                    tools:text="@string/app_name"
                     android:text="@{video.uper}"/>
 
                 <TextView
@@ -82,6 +96,7 @@
                     android:layout_height="match_parent"
                     android:gravity="bottom|left"
                     android:textSize="@dimen/text_small"
+                    tools:text="@string/app_name"
                     android:text="@{video.watchNum}"/>
 
                 <TextView
@@ -90,6 +105,7 @@
                     android:layout_height="match_parent"
                     android:gravity="bottom|left"
                     android:textSize="@dimen/text_small"
+                    tools:text="@string/app_name"
                     android:text="@{video.danmuNum}"/>
 
                 <TextView
@@ -98,9 +114,11 @@
                     android:layout_height="match_parent"
                     android:gravity="bottom|right"
                     android:textSize="@dimen/text_small"
+                    tools:text="@string/app_name"
                     android:text="@{video.date}"/>
 
             </LinearLayout>
+
         </RelativeLayout>
 
         <View
