@@ -20,10 +20,8 @@ import cn.wthee.hi3njetpack.viewmodels.VideoViewModel
 import cn.wthee.hi3njetpack.viewmodels.VideoViewModelFactory
 import com.google.android.material.tabs.TabLayout
 import android.view.ViewGroup
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.TimeInterpolator
-import android.animation.ValueAnimator
+import cn.wthee.hi3njetpack.util.OCAnim
+import com.google.android.material.appbar.AppBarLayout
 
 
 class VideoFragment : Fragment() {
@@ -45,13 +43,14 @@ class VideoFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var swipe: SwipeRefreshLayout
     private lateinit var top: ImageView
-    private lateinit var filter: LinearLayout
+    private lateinit var filter: AppBarLayout
+    private var filterIsEXPANDED: Boolean = false
     private lateinit var tabOrder: TabLayout
     private lateinit var tabDura: TabLayout
     private lateinit var binding: FragmentVideoBinding
     private lateinit var factory: VideoViewModelFactory
 
-    private var hiddenViewMeasuredHeight: Int = 0
+    private var tabLayoutMeasuredHeight: Int = 0
 
 
     override fun onCreateView(
@@ -64,9 +63,10 @@ class VideoFragment : Fragment() {
         viewModel = ViewModelProviders.of(this,factory).get(VideoViewModel::class.java)
         initView()
 
-        //TabLayout高度
+
         var density = resources.displayMetrics.density
-        hiddenViewMeasuredHeight =  (density * 50 * 2 + 0.5).toInt()
+        //TabLayout高度
+        tabLayoutMeasuredHeight =  (density * 50 * 2 + 0.5).toInt()
 
         //绑定adapter
         val adapter = VideoAdapter()
@@ -83,7 +83,7 @@ class VideoFragment : Fragment() {
         recyclerView = binding.videoList
         swipe = binding.videoSwipe
         top = binding.videoGoTop
-        filter = binding.filterLayout
+        filter = binding.videoAppBar
         tabOrder = binding.tabO
         tabDura  =binding.tabD
 
@@ -95,6 +95,7 @@ class VideoFragment : Fragment() {
         }
         tabOrder.getTabAt(orderN)!!.select()
         tabDura.getTabAt(durationN)!!.select()
+        recyclerView.setItemViewCacheSize(20)
     }
 
 
@@ -106,7 +107,7 @@ class VideoFragment : Fragment() {
             }
         })
         viewModel.isGone.observe(viewLifecycleOwner, Observer {
-            (activity as AppCompatActivity).findViewById<ProgressBar>(R.id.web_pb).visibility = it
+            (activity as AppCompatActivity).findViewById<ProgressBar>(cn.wthee.hi3njetpack.R.id.web_pb).visibility = it
         })
         viewModel.isRefresh.observe(viewLifecycleOwner, Observer {
             swipe.isRefreshing = it
@@ -191,46 +192,18 @@ class VideoFragment : Fragment() {
                 viewModel.refresh(mUrl)
             }
         })
-    }
 
+        filter.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { p0, p1 ->
+            if( p1 == 0 ) {
 
-    private fun animateOpen(v: View) {
-        v.visibility = View.VISIBLE
-        val animator = createDropAnimator(
-            v, 0,
-            hiddenViewMeasuredHeight
-        )
-        animator.duration = 400
-        animator.interpolator = TimeInterpolator {
-             (Math.cos((it + 1) * Math.PI) / 2.0f).toFloat() + 0.5f
-        }
-        animator.start()
-    }
-
-    private fun animateClose(view: View) {
-        val origHeight = view.height
-        val animator = createDropAnimator(view, origHeight, 0)
-        animator.duration = 400
-        animator.interpolator = TimeInterpolator {
-            (Math.cos((it + 1) * Math.PI) / 2.0f).toFloat() + 0.5f
-        }
-        animator.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
-                view.visibility = View.GONE
+            }else if(p1 <= -250){
+                //折叠状态
+                filterIsEXPANDED = false
+            }else {
+                //中间状态
             }
         })
-        animator.start()
-    }
 
-    private fun createDropAnimator(v: View, start: Int, end: Int): ValueAnimator {
-        val animator = ValueAnimator.ofInt(start, end)
-        animator.addUpdateListener { arg0 ->
-            val value = arg0.animatedValue as Int
-            val layoutParams = v.layoutParams
-            layoutParams.height = value
-            v.layoutParams = layoutParams
-        }
-        return animator
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -242,10 +215,12 @@ class VideoFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.filter -> {
-                if(filter.visibility==View.GONE) {
-                    animateOpen(filter)
-                } else {
-                    animateClose(filter)
+                if(!filterIsEXPANDED) {
+                    OCAnim.animateOpen(filter,tabLayoutMeasuredHeight)
+                    filterIsEXPANDED = true
+                }else{
+                    filter.setExpanded(false)
+                    filterIsEXPANDED = false
                 }
                 return true
             }

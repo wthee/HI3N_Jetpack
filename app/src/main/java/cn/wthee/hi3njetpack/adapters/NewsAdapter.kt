@@ -3,6 +3,7 @@ package cn.wthee.hi3njetpack.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -12,6 +13,7 @@ import cn.wthee.hi3njetpack.MyApplication
 import cn.wthee.hi3njetpack.R
 import cn.wthee.hi3njetpack.data.News
 import cn.wthee.hi3njetpack.databinding.ItemNewsBinding
+import cn.wthee.hi3njetpack.util.ActivityUtil
 import cn.wthee.hi3njetpack.util.PreviewPicUtil
 import cn.wthee.hi3njetpack.view.NewsFragmentDirections
 

@@ -3,6 +3,8 @@ package cn.wthee.hi3njetpack.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -12,19 +14,22 @@ import cn.wthee.hi3njetpack.MyApplication
 import cn.wthee.hi3njetpack.R
 import cn.wthee.hi3njetpack.data.Video
 import cn.wthee.hi3njetpack.databinding.ItemVideoBinding
+import cn.wthee.hi3njetpack.util.ActivityUtil
+import cn.wthee.hi3njetpack.util.OCAnim
 import cn.wthee.hi3njetpack.util.PreviewPicUtil
 import cn.wthee.hi3njetpack.view.VideoFragmentDirections
 
 class VideoAdapter : ListAdapter<Video, VideoAdapter.ViewHolder>(VideoDiffCallback()) {
 
+    private var density = ActivityUtil.instance.currentActivity!!.resources.displayMetrics.density
+    private val introHeight = (density * 20 * 2 + 0.5).toInt()
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
         return ViewHolder(
             DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.item_video, parent, false
+                LayoutInflater.from(parent.context), R.layout.item_video, parent, false
             )
         )
     }
@@ -38,16 +43,33 @@ class VideoAdapter : ListAdapter<Video, VideoAdapter.ViewHolder>(VideoDiffCallba
         params.height = (100 * scale).toInt()
         holder.videoImg.layoutParams = params
         holder.apply {
-            bind(createOnClickListener(video!!.url,video.title), createOnLongClickListener(video.imgurl),video)
+            bind(
+                createOnClickListener(video!!.url, video.title),
+                createOnLongClickListener(video.imgurl),
+                createIntroOnClickListener(holder.videoIntro),
+                video
+            )
             itemView.tag = video
         }
 
     }
 
-    private fun createOnClickListener(link: String,title: String): View.OnClickListener {
+
+    private fun createOnClickListener(link: String, title: String): View.OnClickListener {
         return View.OnClickListener {
-            val direction = VideoFragmentDirections.actionVideoFragmentToVideoWebFragment(link,title)
+            val direction = VideoFragmentDirections.actionVideoFragmentToVideoWebFragment(link, title)
             it.findNavController().navigate(direction)
+        }
+    }
+
+    private fun createIntroOnClickListener(view: TextView): View.OnClickListener {
+
+        return View.OnClickListener {
+            if (view.visibility == View.GONE) {
+                OCAnim.animateOpen(view, introHeight)
+            } else {
+                OCAnim.animateClose(view, introHeight)
+            }
         }
     }
 
@@ -64,10 +86,19 @@ class VideoAdapter : ListAdapter<Video, VideoAdapter.ViewHolder>(VideoDiffCallba
     ) : RecyclerView.ViewHolder(binding.root) {
 
         var videoImg = binding.videoImage
-        fun bind(listener: View.OnClickListener, longClickListener: View.OnLongClickListener, item: Video) {
+        var videoIntro = binding.videoIntro
+        fun bind(
+            listener: View.OnClickListener,
+            longClickListener: View.OnLongClickListener,
+            introClick: View.OnClickListener,
+            item: Video
+        ) {
             binding.apply {
                 clickListener = listener
                 longClick = longClickListener
+                if (introClickListener == null) {
+                    introClickListener = introClick
+                }
                 video = item
                 executePendingBindings()
             }
@@ -78,10 +109,10 @@ class VideoAdapter : ListAdapter<Video, VideoAdapter.ViewHolder>(VideoDiffCallba
 private class VideoDiffCallback : DiffUtil.ItemCallback<Video>() {
 
     override fun areItemsTheSame(oldItem: Video, newItem: Video): Boolean {
-        return oldItem.title == newItem.title
+        return oldItem == newItem
     }
 
     override fun areContentsTheSame(oldItem: Video, newItem: Video): Boolean {
-        return oldItem == newItem
+        return oldItem.title == newItem.title
     }
 }

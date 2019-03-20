@@ -54,6 +54,7 @@ class VideoNetwork {
         webView.loadUrl(url + page)
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
+                intros.clear()
                 for(i in 0..19){
                     webView.loadUrl("javascript:window.local_obj.getIntro(document.getElementsByClassName('des')[$i].innerHTML);")
                 }
@@ -95,7 +96,7 @@ class VideoNetwork {
     internal inner class InJavaScriptLocalObj {
         @JavascriptInterface
         fun getIntro(html: String){
-            intros.add(html)
+            intros.add(html.replace("\n"," "))
         }
         @JavascriptInterface
         fun loadMore(html: String) {

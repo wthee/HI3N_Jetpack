@@ -15,14 +15,16 @@
     <dimen name="margin_normal">16dp</dimen>
     <dimen name="margin_small">8dp</dimen>
 
-
     <dimen name="navigation_drawer_header_height">192dp</dimen>
     <dimen name="navigation_drawer_header_padding">16dp</dimen>
     <dimen name="navigation_drawer_image_width">100dp</dimen>
-    <dimen name="text">17sp</dimen>
+    <dimen name="text">16sp</dimen>
     <dimen name="text_small">12sp</dimen>
-    <dimen name="fgLine">15dp</dimen>
+    <dimen name="tabtextsize">12sp</dimen>
     <dimen name="topSize">30dp</dimen>
     <dimen name="top_button_margin_bottom">50dp</dimen>
     <dimen name="tabHeight">50dp</dimen>
+    <dimen name="cardRadius">3dp</dimen>
+    <dimen name="cardEle">2dp</dimen>
+    <dimen name="cardMargin">5dp</dimen>
 </resources>
