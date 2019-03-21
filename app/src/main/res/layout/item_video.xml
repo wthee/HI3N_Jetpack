@@ -67,6 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/cardMargin"
+                android:onClick="@{introClickListener}"
                 android:layout_below="@id/image">
 
                 <TextView
@@ -76,7 +77,6 @@
                     android:layout_alignParentTop="true"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:onClick="@{introClickListener}"
                     android:text="@{video.title}"
                     android:textColor="@color/text"
                     android:textSize="@dimen/text"
@@ -89,7 +89,6 @@
                     android:layout_below="@id/video_title"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:onClick="@{introClickListener}"
                     android:text="@{video.intro}"
                     android:visibility="gone"
                     tools:text="string/app_namestring/app_namestring/app_namestring/app_namestring/app_namestring/app_name"

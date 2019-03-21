@@ -62,11 +62,6 @@ class NewsWebFragment : Fragment() {
         return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        toolbar.title = mActivity.getText(R.string.app_name)
-    }
-
     private fun showWeb(webView: WebView, url: String){
         webView.settings.javaScriptEnabled = true
         webView.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
@@ -75,8 +70,6 @@ class NewsWebFragment : Fragment() {
         webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 if(newProgress == 100){
-//                    webView.loadUrl("javascript:" +
-//                            "window.local_obj.setTitle(\$('h2').text());")
                     webView.loadUrl("javascript:" +
                             "window.local_obj.setBg(\$('#title_img_big').attr('src'));")
                     webView.loadUrl("javascript:" +
@@ -117,12 +110,6 @@ class NewsWebFragment : Fragment() {
 
     internal inner class InJavaScriptLocalObj {
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-//        @JavascriptInterface
-//        fun setTitle(title: String) {
-//            mActivity.runOnUiThread {
-//                toolbar.title = title
-//            }
-//        }
         @JavascriptInterface
         fun setBg(img: String){
             mActivity.runOnUiThread {

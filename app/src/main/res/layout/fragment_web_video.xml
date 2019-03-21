@@ -8,11 +8,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-            <im.delight.android.webview.AdvancedWebView
-                android:id="@+id/webView"
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipWeb"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent">
+
+                <im.delight.android.webview.AdvancedWebView
+                    android:id="@+id/webView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                </im.delight.android.webview.AdvancedWebView>
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
 
 
     </FrameLayout>

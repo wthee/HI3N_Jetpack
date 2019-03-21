@@ -1,29 +1,24 @@
 package cn.wthee.hi3njetpack.view
 
 import android.content.Context
-import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.graphics.Bitmap
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import cn.wthee.hi3njetpack.databinding.FragmentWebVideoBinding
-import cn.wthee.hi3njetpack.util.PreviewPicUtil
-import android.os.Build
 import android.view.*
-import android.webkit.WebChromeClient
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.ShareCompat
 import cn.wthee.hi3njetpack.R
 import android.widget.FrameLayout
+import cn.wthee.hi3njetpack.databinding.FragmentWebVideoBinding
+import cn.wthee.hi3njetpack.util.PreviewPicUtil
 import cn.wthee.hi3njetpack.util.ShareUtil
 import im.delight.android.webview.AdvancedWebView
+import android.util.Log
+import android.webkit.*
 
 
 class VideoWebFragment : Fragment() {
-
 
     private lateinit var webView: AdvancedWebView
     private lateinit var binding: FragmentWebVideoBinding
@@ -49,6 +44,12 @@ class VideoWebFragment : Fragment() {
         webView = binding.webView
         toolbar = mActivity.findViewById(R.id.toolbar)
         initWebView()
+        binding.swipWeb.setOnRefreshListener {
+            if(binding.swipWeb.isRefreshing){
+                webView.reload()
+                binding.swipWeb.isRefreshing = false
+            }
+        }
         return binding.root
     }
 
@@ -61,6 +62,15 @@ class VideoWebFragment : Fragment() {
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                 webView.loadUrl(url)
                 return true
+            }
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+                val cookieManager = CookieManager.getInstance()
+                val CookieStr = cookieManager.getCookie(url)
+                if (CookieStr != null) {
+                    Log.e("cookie", CookieStr)
+                }
+                super.onPageFinished(view, url)
             }
         }
         webView.webViewClient = wvc

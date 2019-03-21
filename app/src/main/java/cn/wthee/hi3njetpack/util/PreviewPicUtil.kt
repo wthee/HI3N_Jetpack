@@ -73,10 +73,18 @@ object PreviewPicUtil {
     private fun save(context: Context,url: String, savePath: String, isRefresh: Boolean, getUri: GetUri){
 
         var okHttpClient = OkHttpClient()
-        var request = Request.Builder()
-            .get()
-            .url(url)
-            .build()
+        var request = if(url[0]!='h'){
+            Request.Builder()
+                .get()
+                .url("https://$url")
+                .build()
+        }else{
+            Request.Builder()
+                .get()
+                .url(url)
+                .build()
+        }
+
         var call = okHttpClient.newCall(request)
         call.enqueue(object : Callback{
             override fun onFailure(call: Call, e: IOException) {

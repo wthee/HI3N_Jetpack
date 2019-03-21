@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
@@ -26,6 +27,7 @@ import com.anbaoyue.manyiwang.utils.CleanUtil
 import java.util.ArrayList
 import cn.wthee.hi3njetpack.util.ActivityUtil
 import android.os.StrictMode
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
@@ -48,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         ActivityUtil.instance.currentActivity = this
 
+
         //file-->Uri分享
         val builder = StrictMode.VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
@@ -69,6 +72,7 @@ class MainActivity : AppCompatActivity() {
 
         // Set up navigation menu
         setNav()
+
     }
 
 
@@ -183,4 +187,19 @@ class MainActivity : AppCompatActivity() {
             super.onBackPressed()
         }
     }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        try {
+            super.onConfigurationChanged(newConfig)
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+            } else if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
 }
