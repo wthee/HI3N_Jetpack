@@ -8,4 +8,7 @@
     <string name="label_video"></string>
     <string name="menu_news">公告信息</string>
     <string name="shareME">分享应用</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

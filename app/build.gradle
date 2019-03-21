@@ -13,8 +13,8 @@ android {
         applicationId "cn.wthee.hi3nlite"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 15
-        versionName "2.2.3"
+        versionCode 23
+        versionName "2.3.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary true
     }
