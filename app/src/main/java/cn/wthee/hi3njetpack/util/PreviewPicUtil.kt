@@ -30,8 +30,8 @@ import java.io.IOException
 
 object PreviewPicUtil {
 
-    var storePath = Environment.getExternalStorageDirectory ().absolutePath + File.separator + "img"
-    var sharePath = Environment.getExternalStorageDirectory ().absolutePath + File.separator + "share"
+    var storePath = Environment.getExternalStorageDirectory ().absolutePath + File.separator + "hi3n"
+    var sharePath = Environment.getExternalStorageDirectory ().absolutePath + File.separator + "hi3nshare"
     var file = File(sharePath)
     //查看图片
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -84,7 +84,6 @@ object PreviewPicUtil {
                 .url(url)
                 .build()
         }
-
         var call = okHttpClient.newCall(request)
         call.enqueue(object : Callback{
             override fun onFailure(call: Call, e: IOException) {
