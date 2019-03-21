@@ -20,6 +20,13 @@
     </fragment>
 
     <fragment
+        android:id="@+id/dynamicFragment"
+        android:name="cn.wthee.hi3njetpack.view.DynamicFragment"
+        tools:layout="@layout/fragment_dynamic"/>
+
+
+
+    <fragment
         android:id="@+id/videoFragment"
         android:name="cn.wthee.hi3njetpack.view.VideoFragment"
         android:label="@string/label_video"
@@ -38,6 +45,9 @@
             app:exitAnim="@anim/exit_change"
             app:popEnterAnim="@anim/popenter_change"
             app:popExitAnim="@anim/popexit_change" />
+        <action
+            android:id="@+id/action_videoFragment_to_dynamicFragment"
+            app:destination="@id/dynamicFragment" />
     </fragment>
 
     <fragment
