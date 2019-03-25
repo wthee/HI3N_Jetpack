@@ -4,9 +4,15 @@
 
 
     <item
-        android:id="@+id/change"
+        android:id="@+id/news"
         android:icon="@android:drawable/sym_action_chat"
         android:title="@string/menu_news"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/book"
+        android:icon="@drawable/book1"
+        android:title="@string/book"
         app:showAsAction="always" />
 
     <item

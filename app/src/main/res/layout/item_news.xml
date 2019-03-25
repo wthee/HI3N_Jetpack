@@ -6,7 +6,7 @@
 
         <variable
             name="news"
-            type="cn.wthee.hi3njetpack.data.News" />
+            type="cn.wthee.hi3nlite.data.News" />
 
         <variable
             name="clickListener"

@@ -7,7 +7,7 @@
 
         <variable
             name="video"
-            type="cn.wthee.hi3njetpack.data.Video" />
+            type="cn.wthee.hi3nlite.data.Video" />
 
         <variable
             name="clickListener"
