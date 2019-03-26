@@ -102,7 +102,7 @@ object PreviewPicUtil {
                 if (!appDir.exists()) {
                     appDir.mkdir()
                 }
-                var fileName  = System.currentTimeMillis().toString() + ".png";
+                var fileName  = System.currentTimeMillis().toString() + ".jpg";
                 var file = File(appDir, fileName)
                 file.createNewFile()
                 var inputStream = response.body()!!.byteStream()

@@ -4,6 +4,7 @@ package cn.wthee.hi3nlite.data
 class Video(val url: String,
             val title: String,
             val imgurl: String,
+            val imgurlM:String,
             val date: String,
             val uper: String,
             val watchNum: String,

@@ -15,7 +15,7 @@ class VideoNetwork {
 
     private val urlRegex = "href=\".*? target=\"_blank\" class=\"title\""
     private val titleRegex = "target=\"_blank\" title=.*?class=\"img-anchor\""
-    private val imgRegex = "<img alt=\"\" src=\".*?.(jpg|bmp|gif|ico|pcx|jpeg|tif|png)"
+    private val imgRegex = "<img alt=\"\" src=\".*?.webp"
     private val dateRegex = "\\d{4}-\\d{2}-\\d{2}"
     private val uperRegex = "class=\"up-name\">.*?</a>"
     private val watchNumRegex = "^\\s*\\d+\$|^.*?万\$"
@@ -168,11 +168,15 @@ class VideoNetwork {
                 }
             }
 
-            while (num < urls.size) {
+            while (num < imgs.size) {
+                var temp  = imgs[num].substring(0,imgs[num].length-15)
+                var imgurlM = if(temp.substring(temp.length-3,temp.length)=="jpg") temp else imgs[num]
+
                 var video = Video(
                     "https:" + urls[num],
                     titles[num],
                     "https://" + imgs[num],
+                    "https://$imgurlM",
                     dates[num],
                     upers[num] + "·",
                     watchNums[num] + "次播放·",

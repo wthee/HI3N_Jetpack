@@ -33,19 +33,23 @@
                         android:layout_height="wrap_content"
                         app:layout_collapseMode="parallax">
 
-                            <com.google.android.material.tabs.TabLayout
-                                android:id="@+id/tabO"
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/tabHeight"
-                                app:tabTextAppearance="@style/TabLayoutTextStyle"
-                                android:background="@color/white" />
+                        <com.google.android.material.tabs.TabLayout
+                            android:id="@+id/tabO"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/tabHeight"
+                            android:background="@color/white"
+                            app:tabSelectedTextColor="@color/colorAccent"
+                            app:tabTextAppearance="@style/TabLayoutTextStyle"
+                            app:tabTextColor="@color/text" />
 
-                            <com.google.android.material.tabs.TabLayout
-                                android:id="@+id/tabD"
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/tabHeight"
-                                app:tabTextAppearance="@style/TabLayoutTextStyle"
-                                android:background="@color/white"/>
+                        <com.google.android.material.tabs.TabLayout
+                            android:id="@+id/tabD"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/tabHeight"
+                            android:background="@color/white"
+                            app:tabSelectedTextColor="@color/colorAccent"
+                            app:tabTextAppearance="@style/TabLayoutTextStyle"
+                            app:tabTextColor="@color/text" />
 
                     </LinearLayout>
 

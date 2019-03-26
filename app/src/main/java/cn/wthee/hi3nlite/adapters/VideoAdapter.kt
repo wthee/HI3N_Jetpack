@@ -44,7 +44,7 @@ class VideoAdapter : ListAdapter<Video, VideoAdapter.ViewHolder>(VideoDiffCallba
         holder.apply {
             bind(
                 createOnClickListener(video!!.url, video.title),
-                createOnLongClickListener(video.imgurl),
+                createOnLongClickListener(video.imgurlM),
                 createIntroOnClickListener(holder.videoIntro),
                 video
             )

@@ -1,6 +1,7 @@
 package cn.wthee.hi3nlite
 
 import android.Manifest
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
@@ -24,8 +25,11 @@ import com.anbaoyue.manyiwang.utils.CleanUtil
 import java.util.ArrayList
 import cn.wthee.hi3nlite.util.ActivityUtil
 import android.os.StrictMode
+import android.preference.PreferenceManager
 import android.view.View
+import android.widget.Switch
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import cn.wthee.hi3njetpack.R
 import cn.wthee.hi3nlite.util.PreviewPicUtil
 import cn.wthee.hi3nlite.util.ShareUtil
@@ -40,21 +44,44 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+    private lateinit var navheadView: View
+
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
+    companion object {
+        var isNightMode: Boolean = false
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        isNightMode = sharedPreferences.getBoolean("isNightMode",false)
+        editor = sharedPreferences.edit()
+        setNightMode()
+
         PreviewPicUtil.deleteFile(PreviewPicUtil.file)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         ActivityUtil.instance.currentActivity = this
 
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        getAuthority()
 
         //file-->Uri分享
         val builder = StrictMode.VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
         builder.detectFileUriExposure()
 
-        getAuthority()
 
+    }
+
+    private fun setNightMode() {
+        if(isNightMode){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+        editor.putBoolean("isNightMode",isNightMode)
+        editor.apply()
     }
 
     private fun start(){
@@ -62,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         navigationMenu = binding.navigationView
         navController = Navigation.findNavController(this, R.id.nav_graph)
         appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
-
+        navheadView = navigationMenu.getHeaderView(0)
         //Set up ActionBar
         setSupportActionBar(binding.toolbar)
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -72,13 +99,18 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
     private fun setNav() {
         navigationMenu.setupWithNavController(navController)
         navigationMenu.menu.findItem(R.id.cleanCaches).title = "清理缓存    " + CleanUtil.getTotalCacheSize(this)
-        var appInfo = navigationMenu.getHeaderView(0).findViewById<TextView>(R.id.appInfo)
-        var packageInfo = packageManager.getPackageInfo(packageName, 0)
-        appInfo.text = resources.getText(R.string.app_name).toString() + "   版本:" + packageInfo.versionName
+        var appInfo = navheadView.findViewById<TextView>(R.id.appInfo)
+        var switchDN = navheadView.findViewById<Switch>(R.id.dayNight)
+        appInfo.text = resources.getText(R.string.app_name).toString() + "   版本:" + packageManager.getPackageInfo(packageName, 0).versionName
+        switchDN.isChecked  = isNightMode
+        switchDN.setOnClickListener {
+            isNightMode = switchDN.isChecked
+            setNightMode()
+            recreate()
+        }
         navigationMenu.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.news ->{

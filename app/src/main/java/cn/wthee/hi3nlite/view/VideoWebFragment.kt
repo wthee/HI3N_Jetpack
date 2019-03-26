@@ -15,6 +15,7 @@ import cn.wthee.hi3nlite.util.ShareUtil
 import im.delight.android.webview.AdvancedWebView
 import android.util.Log
 import android.webkit.*
+import cn.wthee.hi3nlite.MainActivity
 
 
 class VideoWebFragment : Fragment() {
@@ -44,7 +45,7 @@ class VideoWebFragment : Fragment() {
         toolbar = mActivity.findViewById(R.id.toolbar)
         initWebView()
         binding.swipWeb.setOnRefreshListener {
-            if(binding.swipWeb.isRefreshing){
+            if (binding.swipWeb.isRefreshing) {
                 webView.reload()
                 binding.swipWeb.isRefreshing = false
             }
@@ -79,10 +80,7 @@ class VideoWebFragment : Fragment() {
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 val cookieManager = CookieManager.getInstance()
-                val CookieStr = cookieManager.getCookie(url)
-                if (CookieStr != null) {
-                    Log.e("cookie", CookieStr)
-                }
+                cookieManager.getCookie(url)
                 super.onPageFinished(view, url)
             }
         }
@@ -106,12 +104,12 @@ class VideoWebFragment : Fragment() {
         }
 
         webView.setOnKeyListener { v, keyCode, event ->
-            if ((keyCode == KeyEvent.KEYCODE_BACK)){
+            if ((keyCode == KeyEvent.KEYCODE_BACK)) {
                 if (customView != null) {
                     hideCustomView()
                 } else if (webView.canGoBack()) {
                     webView.goBack()
-                }else{
+                } else {
                     return@setOnKeyListener false
                 }
                 return@setOnKeyListener true
@@ -134,7 +132,8 @@ class VideoWebFragment : Fragment() {
 
     private fun setDesktopMode(enabled: Boolean) {
         val webSettings = webView.settings
-        webSettings.userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36"
+        webSettings.userAgentString =
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36"
         webSettings.loadWithOverviewMode = enabled
         webSettings.builtInZoomControls = enabled
         webSettings.javaScriptEnabled = enabled
@@ -190,13 +189,16 @@ class VideoWebFragment : Fragment() {
     }
 
     private fun setStatusBarVisibility(visible: Boolean) {
-        if(visible){
+        if (visible) {
             //竖屏
             mActivity.window.setFlags(0, WindowManager.LayoutParams.FLAG_FULLSCREEN)
             mActivity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        }else{
+        } else {
             //横屏
-            mActivity.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            mActivity.window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+            )
             mActivity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         }
     }
@@ -211,7 +213,7 @@ class VideoWebFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_share -> {
-                ShareUtil.shareText("$mTitle——点击查看$mLink",binding.root.context)
+                ShareUtil.shareText("$mTitle——点击查看$mLink", binding.root.context)
                 return true
             }
             else -> super.onOptionsItemSelected(item)

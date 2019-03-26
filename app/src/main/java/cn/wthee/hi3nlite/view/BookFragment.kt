@@ -13,6 +13,7 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import cn.wthee.hi3njetpack.R
+import cn.wthee.hi3nlite.util.PreviewPicUtil
 import kotlinx.android.synthetic.main.fragment_book.*
 
 
@@ -38,7 +39,7 @@ class BookFragment : Fragment() {
                super.onPageFinished(view, url)
             }
         }
-        webView.setOnKeyListener { v, keyCode, event ->
+        webView.setOnKeyListener { _, keyCode, _ ->
             if ((keyCode == KeyEvent.KEYCODE_BACK)) {
                 if(webView.canGoBack()) {
                     webView.goBack()
@@ -48,6 +49,16 @@ class BookFragment : Fragment() {
                 return@setOnKeyListener true
             }
             return@setOnKeyListener false
+        }
+        webView.setOnLongClickListener {
+            var hitTestResult = webView.hitTestResult
+            if (hitTestResult.type == WebView.HitTestResult.IMAGE_TYPE ||
+                hitTestResult.type == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE
+            ) {
+                PreviewPicUtil.preview(view.context, hitTestResult.extra)
+                return@setOnLongClickListener true
+            }
+            return@setOnLongClickListener false;
         }
         return view
     }
