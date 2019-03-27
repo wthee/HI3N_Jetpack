@@ -1,4 +1,4 @@
-package cn.wthee.hi3nlite.viewmodels
+package cn.wthee.hi3nlite.ui.news
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

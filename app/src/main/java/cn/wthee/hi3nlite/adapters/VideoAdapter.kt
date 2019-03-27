@@ -13,10 +13,10 @@ import cn.wthee.hi3nlite.MyApplication
 import cn.wthee.hi3njetpack.R
 import cn.wthee.hi3nlite.data.Video
 import cn.wthee.hi3njetpack.databinding.ItemVideoBinding
+import cn.wthee.hi3nlite.ui.video.VideoFragmentDirections
 import cn.wthee.hi3nlite.util.ActivityUtil
 import cn.wthee.hi3nlite.util.OCAnim
 import cn.wthee.hi3nlite.util.PreviewPicUtil
-import cn.wthee.hi3nlite.view.VideoFragmentDirections
 
 class VideoAdapter : ListAdapter<Video, VideoAdapter.ViewHolder>(VideoDiffCallback()) {
 

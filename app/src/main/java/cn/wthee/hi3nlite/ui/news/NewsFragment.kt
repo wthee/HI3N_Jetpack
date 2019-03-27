@@ -1,4 +1,4 @@
-package cn.wthee.hi3nlite.view
+package cn.wthee.hi3nlite.ui.news
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -18,7 +18,6 @@ import cn.wthee.hi3nlite.adapters.NewsAdapter
 import cn.wthee.hi3njetpack.databinding.FragmentNewsBinding
 import cn.wthee.hi3nlite.util.InjectorUtil
 import cn.wthee.hi3nlite.util.RecyclerViewUtil
-import cn.wthee.hi3nlite.viewmodels.NewsViewModel
 
 class NewsFragment : Fragment() {
 

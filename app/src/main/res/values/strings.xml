@@ -6,10 +6,11 @@
     <string name="label_news"></string>
     <string name="label_web"></string>
     <string name="label_video"></string>
-    <string name="menu_news">公告信息</string>
-    <string name="shareME">分享应用</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu_news">公告信息</string>
+    <string name="miyou">米游社</string>
     <string name="book">漫画|音乐</string>
+    <string name="shareME">分享应用</string>
 </resources>

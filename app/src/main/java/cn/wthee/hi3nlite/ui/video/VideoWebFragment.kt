@@ -1,4 +1,4 @@
-package cn.wthee.hi3nlite.view
+package cn.wthee.hi3nlite.ui.video
 
 import android.content.Context
 import android.content.pm.ActivityInfo
@@ -13,9 +13,7 @@ import cn.wthee.hi3njetpack.databinding.FragmentWebVideoBinding
 import cn.wthee.hi3nlite.util.PreviewPicUtil
 import cn.wthee.hi3nlite.util.ShareUtil
 import im.delight.android.webview.AdvancedWebView
-import android.util.Log
 import android.webkit.*
-import cn.wthee.hi3nlite.MainActivity
 
 
 class VideoWebFragment : Fragment() {

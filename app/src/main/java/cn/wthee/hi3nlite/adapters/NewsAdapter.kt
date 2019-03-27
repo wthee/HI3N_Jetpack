@@ -12,8 +12,8 @@ import cn.wthee.hi3nlite.MyApplication
 import cn.wthee.hi3njetpack.R
 import cn.wthee.hi3nlite.data.News
 import cn.wthee.hi3njetpack.databinding.ItemNewsBinding
+import cn.wthee.hi3nlite.ui.news.NewsFragmentDirections
 import cn.wthee.hi3nlite.util.PreviewPicUtil
-import cn.wthee.hi3nlite.view.NewsFragmentDirections
 
 class NewsAdapter : ListAdapter<News, NewsAdapter.ViewHolder>(NewsDiffCallback()) {
 

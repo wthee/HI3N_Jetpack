@@ -31,9 +31,9 @@ import android.widget.Switch
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import cn.wthee.hi3njetpack.R
+import cn.wthee.hi3nlite.ui.video.VideoFragmentDirections
 import cn.wthee.hi3nlite.util.PreviewPicUtil
 import cn.wthee.hi3nlite.util.ShareUtil
-import cn.wthee.hi3nlite.view.VideoFragmentDirections
 import com.google.android.material.navigation.NavigationView
 import com.nineoldandroids.view.ViewHelper
 
@@ -115,6 +115,11 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.news ->{
                     val direction = VideoFragmentDirections.actionVideoFragmentToNewsFragment()
+                    this.findNavController(R.id.nav_graph).navigate(direction)
+                    drawerLayout.closeDrawers()
+                }
+                R.id.miyou ->{
+                    val direction = VideoFragmentDirections.actionVideoFragmentToMiYouFragment()
                     this.findNavController(R.id.nav_graph).navigate(direction)
                     drawerLayout.closeDrawers()
                 }

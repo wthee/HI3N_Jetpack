@@ -5,8 +5,8 @@ import cn.wthee.hi3nlite.data.NewsNetwork
 import cn.wthee.hi3nlite.data.NewsRepository
 import cn.wthee.hi3nlite.data.VideoNetwork
 import cn.wthee.hi3nlite.data.VideoRepository
-import cn.wthee.hi3nlite.viewmodels.NewsViewModelFactory
-import cn.wthee.hi3nlite.viewmodels.VideoViewModelFactory
+import cn.wthee.hi3nlite.ui.news.NewsViewModelFactory
+import cn.wthee.hi3nlite.ui.video.VideoViewModelFactory
 
 object InjectorUtil {
 

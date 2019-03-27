@@ -10,6 +10,12 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/miyou"
+        android:icon="@drawable/miyou"
+        android:title="@string/miyou"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/book"
         android:icon="@drawable/book1"
         android:title="@string/book"

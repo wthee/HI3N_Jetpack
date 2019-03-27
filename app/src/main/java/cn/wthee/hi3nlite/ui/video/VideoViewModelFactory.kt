@@ -1,4 +1,4 @@
-package cn.wthee.hi3nlite.viewmodels
+package cn.wthee.hi3nlite.ui.video
 
 import android.webkit.WebView
 import androidx.lifecycle.ViewModel

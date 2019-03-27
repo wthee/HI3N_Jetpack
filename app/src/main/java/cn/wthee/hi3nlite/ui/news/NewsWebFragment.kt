@@ -1,4 +1,4 @@
-package cn.wthee.hi3nlite.view
+package cn.wthee.hi3nlite.ui.news
 
 import android.os.Bundle
 import android.os.Handler

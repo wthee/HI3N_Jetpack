@@ -1,4 +1,4 @@
-package cn.wthee.hi3nlite.view
+package cn.wthee.hi3nlite.ui
 
 
 import android.os.Bundle
@@ -6,15 +6,16 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.CookieManager
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import cn.wthee.hi3njetpack.R
 import cn.wthee.hi3nlite.util.PreviewPicUtil
-import kotlinx.android.synthetic.main.fragment_book.*
 
 
 class BookFragment : Fragment() {
@@ -24,7 +25,10 @@ class BookFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        (activity as AppCompatActivity).findViewById<ProgressBar>(cn.wthee.hi3njetpack.R.id.web_pb).visibility = View.VISIBLE
+
+        (activity as AppCompatActivity).findViewById<ProgressBar>(R.id.web_pb).visibility = View.VISIBLE
+        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.toolbar).visibility = View.GONE
+
         var view = inflater.inflate(R.layout.fragment_book, container, false)
         webView = view.findViewById<WebView>(R.id.bookWeb)
         webView.settings.javaScriptEnabled = true
@@ -36,7 +40,9 @@ class BookFragment : Fragment() {
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 (activity as AppCompatActivity).findViewById<ProgressBar>(cn.wthee.hi3njetpack.R.id.web_pb).visibility = View.GONE
-               super.onPageFinished(view, url)
+                val cookieManager = CookieManager.getInstance()
+                cookieManager.getCookie(url)
+                super.onPageFinished(view, url)
             }
         }
         webView.setOnKeyListener { _, keyCode, _ ->
@@ -75,6 +81,7 @@ class BookFragment : Fragment() {
 
     override fun onDestroyView() {
         webView.destroy()
+        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.toolbar).visibility = View.VISIBLE
         super.onDestroyView()
     }
 

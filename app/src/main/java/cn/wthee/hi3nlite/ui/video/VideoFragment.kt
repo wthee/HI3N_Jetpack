@@ -1,4 +1,4 @@
-package cn.wthee.hi3nlite.view
+package cn.wthee.hi3nlite.ui.video
 
 import android.os.Bundle
 import android.view.*
@@ -15,8 +15,6 @@ import cn.wthee.hi3nlite.adapters.VideoAdapter
 import cn.wthee.hi3njetpack.databinding.FragmentVideoBinding
 import cn.wthee.hi3nlite.util.InjectorUtil
 import cn.wthee.hi3nlite.util.RecyclerViewUtil
-import cn.wthee.hi3nlite.viewmodels.VideoViewModel
-import cn.wthee.hi3nlite.viewmodels.VideoViewModelFactory
 import com.google.android.material.tabs.TabLayout
 import android.view.ViewGroup
 import cn.wthee.hi3nlite.util.OCAnim
