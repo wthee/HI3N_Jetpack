@@ -25,21 +25,20 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-
 object PreviewPicUtil {
 
-    var storePath = Environment.getExternalStorageDirectory ().absolutePath + File.separator + "hi3n"
-    var sharePath = Environment.getExternalStorageDirectory ().absolutePath + File.separator + "hi3nshare"
+    var storePath = Environment.getExternalStorageDirectory().absolutePath + File.separator + "hi3n"
+    var sharePath = Environment.getExternalStorageDirectory().absolutePath + File.separator + "hi3nshare"
     var file = File(sharePath)
     //查看图片
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    fun preview(context: Context, url: String){
-        val list = arrayOf("查看原图","保存图片","分享图片")
+    fun preview(context: Context, url: String) {
+        val list = arrayOf("查看原图", "保存图片", "分享图片")
         var alertDialog = AlertDialog.Builder(context)
         var dialog = alertDialog.setItems(list) { _, i ->
             when (i) {
-                0 ->{
-                    Toast.makeText(context,"长按任意位置保存图片",Toast.LENGTH_SHORT).show()
+                0 -> {
+                    Toast.makeText(context, "长按任意位置保存图片", Toast.LENGTH_SHORT).show()
                     var dialog = Dialog(context)
                     dialog.setContentView(getPhotoView(context, url))
                     dialog.window.setBackgroundDrawable(context.getDrawable(R.drawable.bg))
@@ -60,7 +59,7 @@ object PreviewPicUtil {
                             }
                         })
                 }
-                2 ->{
+                2 -> {
                     save(
                         context,
                         url,
@@ -78,52 +77,57 @@ object PreviewPicUtil {
     }
 
     //保存图片
-    private fun save(context: Context,url: String, savePath: String, isRefresh: Boolean, getUri: GetUri){
+    private fun save(context: Context, url: String, savePath: String, isRefresh: Boolean, getUri: GetUri) {
 
         var okHttpClient = OkHttpClient()
-        var request = if(url[0]!='h'){
+        var request = if (url[0] != 'h') {
             Request.Builder()
                 .get()
                 .url("https://$url")
                 .build()
-        }else{
+        } else {
             Request.Builder()
                 .get()
                 .url(url)
                 .build()
         }
         var call = okHttpClient.newCall(request)
-        call.enqueue(object : Callback{
+        call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 return
             }
+
             override fun onResponse(call: Call, response: Response) {
-                var appDir =  File(savePath)
+                var appDir = File(savePath)
                 if (!appDir.exists()) {
                     appDir.mkdir()
                 }
-                var fileName  = System.currentTimeMillis().toString() + ".jpg";
+                var fileName = System.currentTimeMillis().toString() + ".jpg";
                 var file = File(appDir, fileName)
                 file.createNewFile()
                 var inputStream = response.body()!!.byteStream()
                 var bitmap = BitmapFactory.decodeStream(inputStream)
                 var out = FileOutputStream(file)
-                bitmap.compress(Bitmap.CompressFormat.PNG,100,out)
+                if(!bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)){
+                    Toast.makeText(context, "保存失败，请检查是否授予权限", Toast.LENGTH_SHORT).show()
+                }
                 out.flush()
                 out.close()
-                if(isRefresh){
-                    var uri = Uri.fromFile (file)
-                    context.sendBroadcast( Intent (Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri))
+                if (isRefresh) {
+                    var uri = Uri.fromFile(file)
+                    context.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri))
                 }
                 getUri.imgUri(file)
             }
         })
     }
-    interface GetUri{
+
+    interface GetUri {
         fun imgUri(file: File)
     }
+
     //分享后删除
-    fun deleteFile(file: File){
+    fun deleteFile(file: File) {
         if (file.isDirectory) {
             var files = file.listFiles()
             files.forEach {
@@ -136,9 +140,10 @@ object PreviewPicUtil {
     }
 
     //动态的ImageView
-    private fun getPhotoView(context: Context,url: String): PhotoView {
+    private fun getPhotoView(context: Context, url: String): PhotoView {
         var pv = PhotoView(context)
-        pv.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        pv.layoutParams =
+            RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         Glide.with(context).load(url).into(pv)
         pv.setOnClickListener {
             Thread {

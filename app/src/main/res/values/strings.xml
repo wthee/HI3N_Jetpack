@@ -3,14 +3,15 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="clean">清理缓存</string>
-    <string name="label_news"></string>
-    <string name="label_web"></string>
-    <string name="label_video"></string>
+    <string name="label_news">公告信息</string>
+    <string name="label_web">视频</string>
+    <string name="label_news_web">公告</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="menu_news">公告信息</string>
-    <string name="miyou">米游社</string>
-    <string name="book">漫画|音乐</string>
+    <string name="menu_miyou">米游社</string>
+    <string name="menu_book">漫画|音乐</string>
     <string name="shareME">分享应用</string>
+    <string name="home">首页</string>
 </resources>

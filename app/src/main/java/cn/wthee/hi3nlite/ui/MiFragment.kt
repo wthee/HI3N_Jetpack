@@ -25,8 +25,6 @@ class MiFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        (activity as AppCompatActivity).findViewById<ProgressBar>(R.id.web_pb).visibility = View.VISIBLE
-        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.toolbar).visibility = View.GONE
 
         var view = inflater.inflate(R.layout.fragment_mi, container, false)
         webView = view.findViewById(R.id.miWeb)
@@ -75,12 +73,15 @@ class MiFragment : Fragment() {
 
     override fun onResume() {
         webView.onResume()
+        (activity as AppCompatActivity).findViewById<ProgressBar>(R.id.web_pb).visibility = View.VISIBLE
+        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.toolbar).visibility = View.GONE
         super.onResume()
     }
 
+
     override fun onDestroyView() {
         webView.destroy()
-        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.toolbar).visibility = View.VISIBLE
+        (activity as AppCompatActivity).findViewById<ProgressBar>(R.id.web_pb).visibility = View.VISIBLE
         super.onDestroyView()
     }
 

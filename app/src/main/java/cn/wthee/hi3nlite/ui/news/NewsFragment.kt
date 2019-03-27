@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
@@ -100,4 +101,8 @@ class NewsFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.toolbar).visibility = View.VISIBLE
+        super.onResume()
+    }
 }

@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import cn.wthee.hi3njetpack.R
+import cn.wthee.hi3nlite.MainActivity
 import cn.wthee.hi3nlite.util.PreviewPicUtil
 
 
@@ -25,9 +26,6 @@ class BookFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        (activity as AppCompatActivity).findViewById<ProgressBar>(R.id.web_pb).visibility = View.VISIBLE
-        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.toolbar).visibility = View.GONE
 
         var view = inflater.inflate(R.layout.fragment_book, container, false)
         webView = view.findViewById<WebView>(R.id.bookWeb)
@@ -75,13 +73,15 @@ class BookFragment : Fragment() {
     }
 
     override fun onResume() {
+        (activity as AppCompatActivity).findViewById<ProgressBar>(R.id.web_pb).visibility = View.VISIBLE
+        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.toolbar).visibility = View.GONE
         webView.onResume()
         super.onResume()
     }
 
     override fun onDestroyView() {
         webView.destroy()
-        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.toolbar).visibility = View.VISIBLE
+        (activity as AppCompatActivity).findViewById<ProgressBar>(R.id.web_pb).visibility = View.GONE
         super.onDestroyView()
     }
 

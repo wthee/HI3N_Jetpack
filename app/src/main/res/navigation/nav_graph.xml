@@ -2,13 +2,27 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
+    android:id="@+id/nav_graph_fragment"
     app:startDestination="@id/videoFragment">
+
+    <fragment
+        android:id="@+id/videoFragment"
+        android:name="cn.wthee.hi3nlite.ui.video.VideoFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_video">
+        <action
+            android:id="@+id/action_videoFragment_to_videoWebFragment"
+            app:destination="@id/videoWebFragment"
+            app:enterAnim="@anim/enter"
+            app:exitAnim="@anim/exit"
+            app:popEnterAnim="@anim/popenter"
+            app:popExitAnim="@anim/popexit" />
+    </fragment>
 
     <fragment
         android:id="@+id/newsFragment"
         android:name="cn.wthee.hi3nlite.ui.news.NewsFragment"
-        android:label="@string/label_news"
+        android:label="@string/menu_news"
         tools:layout="@layout/fragment_news">
         <action
             android:id="@+id/action_newsFragment_to_webFragment"
@@ -22,56 +36,23 @@
     <fragment
         android:id="@+id/bookFragment"
         android:name="cn.wthee.hi3nlite.ui.BookFragment"
-        android:label="@string/label_news"
+        android:label="@string/menu_book"
         tools:layout="@layout/fragment_book">
     </fragment>
 
     <fragment
         android:id="@+id/miFragment"
         android:name="cn.wthee.hi3nlite.ui.MiFragment"
-        android:label="@string/label_news"
+        android:label="@string/menu_miyou"
         tools:layout="@layout/fragment_mi">
     </fragment>
 
-    <fragment
-        android:id="@+id/videoFragment"
-        android:name="cn.wthee.hi3nlite.ui.video.VideoFragment"
-        android:label="@string/label_video"
-        tools:layout="@layout/fragment_video">
-        <action
-            android:id="@+id/action_videoFragment_to_videoWebFragment"
-            app:destination="@id/videoWebFragment"
-            app:enterAnim="@anim/enter"
-            app:exitAnim="@anim/exit"
-            app:popEnterAnim="@anim/popenter"
-            app:popExitAnim="@anim/popexit" />
-        <action
-            android:id="@+id/action_videoFragment_to_newsFragment"
-            app:destination="@id/newsFragment"
-            app:enterAnim="@anim/enter_change"
-            app:exitAnim="@anim/exit_change"
-            app:popEnterAnim="@anim/popenter_change"
-            app:popExitAnim="@anim/popexit_change" />
-        <action
-            android:id="@+id/action_videoFragment_to_bookFragment"
-            app:destination="@id/bookFragment"
-            app:enterAnim="@anim/enter_change"
-            app:exitAnim="@anim/exit_change"
-            app:popEnterAnim="@anim/popenter_change"
-            app:popExitAnim="@anim/popexit_change"/>
-        <action
-            android:id="@+id/action_videoFragment_to_miYouFragment"
-            app:destination="@id/miFragment"
-            app:enterAnim="@anim/enter_change"
-            app:exitAnim="@anim/exit_change"
-            app:popEnterAnim="@anim/popenter_change"
-            app:popExitAnim="@anim/popexit_change" />
-    </fragment>
+
 
     <fragment
         android:id="@+id/newsWebFragment"
         android:name="cn.wthee.hi3nlite.ui.news.NewsWebFragment"
-        android:label="@string/label_web"
+        android:label="@string/label_news_web"
         tools:layout="@layout/fragment_web_news">
         <argument
             android:name="link"

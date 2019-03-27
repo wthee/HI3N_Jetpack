@@ -17,6 +17,7 @@ import cn.wthee.hi3nlite.util.InjectorUtil
 import cn.wthee.hi3nlite.util.RecyclerViewUtil
 import com.google.android.material.tabs.TabLayout
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import cn.wthee.hi3nlite.util.OCAnim
 import com.google.android.material.appbar.AppBarLayout
 
@@ -201,6 +202,11 @@ class VideoFragment : Fragment() {
             }
         })
 
+    }
+
+    override fun onResume() {
+        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.toolbar).visibility = View.VISIBLE
+        super.onResume()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
